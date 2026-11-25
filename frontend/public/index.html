@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Operasional Terpadu — PT Dua Kelinci</title>
+  <!-- Tailwind CSS & ECharts via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .nav-tab.active { border-color: #dc2626; color: #dc2626; font-weight: 700; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <!-- Header & Topbar -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-black text-xl shadow-md shadow-red-200">
+          2K
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-slate-900 leading-tight">Portal Operasional Terpadu</h1>
+          <p class="text-xs text-slate-500 font-medium">PT Dua Kelinci &bull; Live Analytics, AI Agent, WMS & e-Signature</p>
+        </div>
+      </div>
+
+      <!-- User Persona Switcher (SSO Simulation) -->
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2 bg-slate-100 p-1.5 rounded-lg border border-slate-200">
+          <label for="personaSelect" class="text-xs font-semibold text-slate-600 pl-1">
+            <i class="fa-solid fa-user-shield text-slate-400 mr-1"></i>Persona (RLS):
+          </label>
+          <select id="personaSelect" class="text-xs font-semibold bg-white border border-slate-300 rounded px-2.5 py-1 text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500">
+            <option value="muhammad.wyzer@gmail.com" selected>Muhammad Wyzer (Head of Sales - Nasional)</option>
+            <option value="maya.indah@duakelinci.id">Maya Indah (Head of Marketing)</option>
+            <option value="rudi.hartono@duakelinci.id">Rudi Hartono (Head of Finance)</option>
+            <option value="dedi.kurniawan@duakelinci.id">Dedi Kurniawan (Head of Warehouse)</option>
+            <option value="bm.sukro@duakelinci.id">Brand Manager (Sukro)</option>
+            <option value="hr.jabar@duakelinci.id">Head of Region (Jawa Barat)</option>
+            <option value="admin@duakelinci.id">Administrator (Semua Akses)</option>
+          </select>
+        </div>
+
+        <div class="hidden sm:flex items-center space-x-2 border-l border-slate-200 pl-4 text-xs text-slate-500">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="updateTimestamp">Online</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-8 border-t border-slate-100 text-xs font-semibold">
+      <button data-tab="tab-dashboard" class="nav-tab active py-3 border-b-2 border-transparent hover:text-red-600 flex items-center space-x-2">
+        <i class="fa-solid fa-chart-pie"></i><span>Live Dashboard</span>
+      </button>
+      <button data-tab="tab-agent" class="nav-tab py-3 border-b-2 border-transparent hover:text-red-600 flex items-center space-x-2">
+        <i class="fa-solid fa-robot"></i><span>AI Insight Agent (Teams)</span>
+      </button>
+      <button data-tab="tab-forecast" class="nav-tab py-3 border-b-2 border-transparent hover:text-red-600 flex items-center space-x-2">
+        <i class="fa-solid fa-chart-line"></i><span>Forecasting Permintaan</span>
+      </button>
+      <button data-tab="tab-esign" class="nav-tab py-3 border-b-2 border-transparent hover:text-red-600 flex items-center space-x-2">
+        <i class="fa-solid fa-file-signature"></i><span>e-Signature Internal</span>
+      </button>
+      <button data-tab="tab-wms" class="nav-tab py-3 border-b-2 border-transparent hover:text-red-600 flex items-center space-x-2">
+        <i class="fa-solid fa-warehouse"></i><span>WMS Gudang (FEFO)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- ================= TAB 1: LIVE DASHBOARD ================= -->
+    <div id="tab-dashboard" class="tab-content space-y-6">
+      <!-- Global Filter Bar -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap gap-4 items-center justify-between">
+        <div class="flex flex-wrap gap-3 items-center">
+          <div class="flex items-center space-x-2 text-xs">
+            <span class="font-semibold text-slate-600"><i class="fa-regular fa-calendar mr-1"></i>Periode:</span>
+            <input type="date" id="startDate" value="2026-09-01" class="border border-slate-300 rounded px-2 py-1 text-xs text-slate-700">
+            <span class="text-slate-400">s/d</span>
+            <input type="date" id="endDate" value="2026-10-31" class="border border-slate-300 rounded px-2 py-1 text-xs text-slate-700">
+          </div>
+          <div class="flex items-center space-x-1.5 text-xs">
+            <span class="font-semibold text-slate-600">Wilayah:</span>
+            <select id="filterRegion" class="border border-slate-300 rounded px-2 py-1 text-xs text-slate-700"></select>
+          </div>
+          <div class="flex items-center space-x-1.5 text-xs">
+            <span class="font-semibold text-slate-600">Cabang:</span>
+            <select id="filterBranch" class="border border-slate-300 rounded px-2 py-1 text-xs text-slate-700"></select>
+          </div>
+          <div class="flex items-center space-x-1.5 text-xs">
+            <span class="font-semibold text-slate-600">Brand:</span>
+            <select id="filterBrand" class="border border-slate-300 rounded px-2 py-1 text-xs text-slate-700"></select>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button id="btnApplyFilter" class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-sm">
+            <i class="fa-solid fa-filter mr-1.5"></i>Terapkan
+          </button>
+          <button id="btnExportCsv" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg shadow-sm">
+            <i class="fa-solid fa-file-csv text-emerald-600 mr-1.5"></i>Ekspor CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Penjualan Bersih (Net)</span>
+          <div class="text-2xl font-black text-slate-900 mt-1" id="valNetSales">Rp 0</div>
+          <div class="text-xs text-slate-500 mt-2 flex items-center">
+            <span class="text-emerald-600 font-semibold mr-1.5" id="valAchPct">0%</span>
+            <span>vs Target (<span id="valBudgetSales">Rp 0</span>)</span>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Volume Terjual</span>
+          <div class="text-2xl font-black text-slate-900 mt-1" id="valQtyCarton">0</div>
+          <div class="text-xs text-slate-500 mt-2">Dari <span class="font-semibold text-slate-700" id="valInvoices">0</span> faktur transaksi</div>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Diskon</span>
+          <div class="text-2xl font-black text-slate-900 mt-1" id="valDiscount">Rp 0</div>
+          <div class="text-xs text-slate-500 mt-2">Rasio diskon: <span class="font-bold text-amber-600" id="valDiscountPct">0%</span></div>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Stok Kritis Depo</span>
+          <div class="text-2xl font-black text-red-600 mt-1" id="valCriticalStock">0 SKU</div>
+          <div class="text-xs text-slate-500 mt-2">Di bawah batas pengaman cabang</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <h2 class="text-sm font-bold text-slate-900 mb-4">Tren Penjualan Harian</h2>
+          <div id="chartDailyTrend" style="height: 320px; width: 100%;"></div>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <h2 class="text-sm font-bold text-slate-900 mb-4">Distribusi Saluran Outlet</h2>
+          <div id="chartOutletMix" style="height: 320px; width: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- Dynamic Breakdown Table -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-sm font-bold text-slate-900" id="breakdownTitle">Rincian Kinerja Berdasarkan Brand</h2>
+          <div class="inline-flex rounded-md shadow-sm">
+            <button type="button" data-dim="brand" class="btn-dim px-3 py-1.5 text-xs font-semibold rounded-l-lg border border-slate-300 bg-red-600 text-white">Brand</button>
+            <button type="button" data-dim="sku" class="btn-dim px-3 py-1.5 text-xs font-semibold border-t border-b border-slate-300 bg-white text-slate-700">SKU</button>
+            <button type="button" data-dim="region" class="btn-dim px-3 py-1.5 text-xs font-semibold border-t border-b border-slate-300 bg-white text-slate-700">Wilayah</button>
+            <button type="button" data-dim="branch" class="btn-dim px-3 py-1.5 text-xs font-semibold border-t border-b border-slate-300 bg-white text-slate-700">Cabang</button>
+            <button type="button" data-dim="salesman" class="btn-dim px-3 py-1.5 text-xs font-semibold rounded-r-lg border border-slate-300 bg-white text-slate-700">Salesman</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-200 text-left text-xs">
+            <thead class="bg-slate-50 text-slate-600 font-bold uppercase">
+              <tr>
+                <th class="py-3 px-4">Nama</th>
+                <th class="py-3 px-4 text-right">Volume (Karton)</th>
+                <th class="py-3 px-4 text-right">Diskon (Rp)</th>
+                <th class="py-3 px-4 text-right">Net Sales (Rp)</th>
+                <th class="py-3 px-4 text-right">Faktur</th>
+                <th class="py-3 px-4 text-center">Kontribusi (%)</th>
+              </tr>
+            </thead>
+            <tbody id="breakdownTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 2: AI INSIGHT AGENT (TEAMS) ================= -->
+    <div id="tab-agent" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+          <div>
+            <h2 class="text-base font-bold text-slate-900 flex items-center">
+              <i class="fa-solid fa-robot text-red-600 mr-2"></i>AI Insight Agent & Teams Dispatcher
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Simulasi pesan Microsoft Teams Adaptive Card otomatis (Jadwal: 07.00 WIB) dengan Gerbang Anti-Halusinasi.</p>
+          </div>
+          <button id="btnRefreshAgent" class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-lg">
+            <i class="fa-solid fa-arrows-rotate mr-1.5"></i>Generate Ringkasan Baru
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <!-- Adaptive Card Preview Container (Teams Style) -->
+          <div class="bg-slate-100 p-6 rounded-2xl border border-slate-200 flex flex-col items-center">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Preview Microsoft Teams (Adaptive Card)</span>
+            <div class="w-full max-w-md bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
+              <div class="bg-red-600 p-4 text-white">
+                <div class="text-xs font-bold tracking-wider uppercase">PT Dua Kelinci &bull; Executive Digest</div>
+                <div class="text-sm font-semibold" id="cardRecipient">Penerima: Memuat...</div>
+              </div>
+              <div class="p-5 space-y-4">
+                <p class="text-xs text-slate-700 leading-relaxed font-medium" id="cardNarrative">Memuat narasi AI...</p>
+                <div class="border-t border-slate-100 pt-3 space-y-2 text-xs" id="cardFactList"></div>
+            <div class="pt-2 flex space-x-2">
+              <button onclick="dispatchToTeams()" class="w-full bg-red-600 hover:bg-red-700 text-white text-xs font-semibold py-2 rounded-lg flex items-center justify-center space-x-1.5 shadow-sm">
+                <i class="fa-solid fa-paper-plane"></i><span>Kirim ke Microsoft Teams Saya</span>
+              </button>
+            </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status Verifikasi Anti-Halusinasi -->
+          <div class="space-y-4">
+            <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+              <h3 class="text-xs font-bold text-emerald-800 uppercase flex items-center">
+                <i class="fa-solid fa-shield-halved text-emerald-600 mr-2"></i>Status Numeric Verification Gate
+              </h3>
+              <p class="text-xs text-emerald-700 mt-1" id="agentVerificationStatus">Memeriksa integritas angka...</p>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2">
+              <h3 class="text-xs font-bold text-slate-700 uppercase">Jadwal Pengiriman Otomatis (Cron WIB)</h3>
+              <ul class="text-xs text-slate-600 space-y-1.5">
+                <li><i class="fa-solid fa-clock text-slate-400 mr-1.5"></i><strong>Harian:</strong> Setiap hari pukul 07.00 WIB (Ringkasan hari sebelumnya).</li>
+                <li><i class="fa-solid fa-calendar-week text-slate-400 mr-1.5"></i><strong>Mingguan:</strong> Setiap Senin pukul 07.00 WIB (Performa WoW & Sisa Target).</li>
+                <li><i class="fa-solid fa-network-wired text-slate-400 mr-1.5"></i><strong>Kanal:</strong> Chat Pribadi & Channel Teams Manajer Terkait.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 3: FORECASTING PERMINTAAN ================= -->
+    <div id="tab-forecast" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+          <div>
+            <h2 class="text-base font-bold text-slate-900 flex items-center">
+              <i class="fa-solid fa-chart-line text-blue-600 mr-2"></i>Engine Forecasting Permintaan (14 Hari ke Depan)
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Model Exponential Smoothing berbasis faktor siklus mingguan (Senin-Sabtu aktif, Minggu libur).</p>
+          </div>
+          <span class="text-xs px-3 py-1 bg-blue-50 text-blue-700 font-bold rounded-lg border border-blue-200">Horizon: 1 - 14 November 2026</span>
+        </div>
+
+        <!-- Grafik Forecasting ECharts -->
+        <div>
+          <div id="chartForecast" style="height: 340px; width: 100%;"></div>
+        </div>
+
+        <!-- Tabel Risiko Kehabisan Stok -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+            <h3 class="text-xs font-bold text-slate-800 uppercase"><i class="fa-solid fa-triangle-exclamation text-amber-500 mr-2"></i>Prediksi Risiko Kehabisan Stok (Depo Cabang)</h3>
+            <span class="text-xs text-slate-500 font-medium">Berdasarkan burn-rate harian 14 hari ke depan</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200 text-left text-xs">
+              <thead class="bg-white text-slate-600 font-bold uppercase">
+                <tr>
+                  <th class="py-2.5 px-4">Cabang & Gudang</th>
+                  <th class="py-2.5 px-4">Brand</th>
+                  <th class="py-2.5 px-4">Nama SKU Produk</th>
+                  <th class="py-2.5 px-4 text-right">Stok Fisik Saat Ini</th>
+                  <th class="py-2.5 px-4 text-right">Estimasi Habis</th>
+                  <th class="py-2.5 px-4 text-center">Tingkat Urgensi</th>
+                </tr>
+              </thead>
+              <tbody id="forecastRisksTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 4: E-SIGNATURE INTERNAL (HOD MULTI-TIER) ================= -->
+    <div id="tab-esign" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
+        <div class="flex flex-wrap items-center justify-between pb-4 border-b border-slate-200 gap-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-900 flex items-center">
+              <i class="fa-solid fa-file-signature text-emerald-600 mr-2"></i>Modul e-Signature Otorisasi Head of Department (HOD)
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Alur persetujuan digital berjenjang: Sales &bull; Marketing &bull; Finance &bull; Warehouse (Terverifikasi Hash SHA-256).</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="seedEsignDemo()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg border border-slate-300">
+              <i class="fa-solid fa-arrows-rotate mr-1.5"></i>Reset Demo Dokumen
+            </button>
+            <button onclick="promptCreateHodDoc()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-sm">
+              <i class="fa-solid fa-plus mr-1.5"></i>Buat Pengajuan HOD
+            </button>
+          </div>
+        </div>
+
+        <!-- Matriks Singkat HOD -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
+          <div class="border-l-4 border-red-500 pl-3">
+            <div class="font-bold text-slate-800">Head of Sales</div>
+            <div class="text-slate-500 text-[11px]">Muhammad Wyzer</div>
+            <div class="text-[10px] text-red-600 font-medium">SO Overlimit & Retur Penjualan</div>
+          </div>
+          <div class="border-l-4 border-blue-500 pl-3">
+            <div class="font-bold text-slate-800">Head of Marketing</div>
+            <div class="text-slate-500 text-[11px]">Maya Indah</div>
+            <div class="text-[10px] text-blue-600 font-medium">Budget Trade Promo & Diskon</div>
+          </div>
+          <div class="border-l-4 border-emerald-500 pl-3">
+            <div class="font-bold text-slate-800">Head of Finance</div>
+            <div class="text-slate-500 text-[11px]">Rudi Hartono</div>
+            <div class="text-[10px] text-emerald-600 font-medium">Payment Voucher & Write-off</div>
+          </div>
+          <div class="border-l-4 border-amber-500 pl-3">
+            <div class="font-bold text-slate-800">Head of Warehouse</div>
+            <div class="text-slate-500 text-[11px]">Dedi Kurniawan</div>
+            <div class="text-[10px] text-amber-600 font-medium">Transfer Antar-Depo & Stock Opname</div>
+          </div>
+        </div>
+
+        <div class="space-y-4" id="esignDocumentList">
+          <div class="text-center py-8 text-slate-400 text-xs">Memuat dokumen e-signature...</div>
+        </div>
+      </div>
+    </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 5: WMS GUDANG FEFO ================= -->
+    <div id="tab-wms" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+          <div>
+            <h2 class="text-base font-bold text-slate-900 flex items-center">
+              <i class="fa-solid fa-warehouse text-purple-600 mr-2"></i>WMS Ringan — Rekomendasi Alokasi FEFO
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">First Expired, First Out: Batch dengan tanggal kedaluwarsa terdekat dialokasikan otomatis.</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-4 gap-3 items-end text-xs">
+          <div>
+            <label class="font-bold text-slate-600 block mb-1">Gudang Cabang:</label>
+            <select id="wmsWarehouse" class="w-full border border-slate-300 rounded px-2.5 py-1.5 bg-white">
+              <option value="WH-BDG">Gudang Bandung (WH-BDG)</option>
+              <option value="WH-JKB">Gudang Jakarta Barat (WH-JKB)</option>
+              <option value="WH-SBY">Gudang Surabaya (WH-SBY)</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-slate-600 block mb-1">SKU Produk:</label>
+            <select id="wmsSku" class="w-full border border-slate-300 rounded px-2.5 py-1.5 bg-white">
+              <option value="Sukro Pedas 100g">Sukro Pedas 100g</option>
+              <option value="Kacang Kulit 70g">Kacang Kulit 70g</option>
+              <option value="Tos Tos Tortilla BBQ 140g">Tos Tos Tortilla BBQ 140g</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-slate-600 block mb-1">Jumlah Diambil (Karton):</label>
+            <input type="number" id="wmsQty" value="40" class="w-full border border-slate-300 rounded px-2.5 py-1.5 bg-white">
+          </div>
+          <button id="btnCheckFefo" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg">
+            <i class="fa-solid fa-boxes-stacked mr-1.5"></i>Cari Rekomendasi FEFO
+          </button>
+        </div>
+
+        <!-- Hasil FEFO -->
+        <div id="wmsResultContainer" class="border border-slate-200 rounded-xl p-5 bg-white space-y-3">
+          <h3 class="text-xs font-bold text-slate-800 uppercase">Hasil Alokasi Batch Terpilih</h3>
+          <div id="wmsAllocationsList" class="space-y-2 text-xs"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const API_BASE = 'http://127.0.0.1:8000/api/v1';
+    let currentDimension = 'brand';
+    let chartTrendInstance = null;
+    let chartOutletInstance = null;
+    let chartForecastInstance = null;
+    let totalPeriodNetSales = 0;
+
+    function formatRupiah(val) {
+      return 'Rp ' + Number(val || 0).toLocaleString('id-ID', { maximumFractionDigits: 0 });
+    }
+
+    function getHeaders() {
+      const email = document.getElementById('personaSelect').value;
+      return { 'X-User-Email': email };
+    }
+
+    // Tab Navigation
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        tab.classList.add('active');
+        const target = tab.getAttribute('data-tab');
+        document.getElementById(target).classList.remove('hidden');
+
+        if (target === 'tab-forecast' && chartForecastInstance) {
+          setTimeout(() => chartForecastInstance.resize(), 100);
+        }
+      });
+    });
+
+    // Load Filters
+    async function loadFilterOptions() {
+      try {
+        const res = await fetch(`${API_BASE}/dashboard/filters`, { headers: getHeaders() });
+        const data = await res.json();
+        const regSelect = document.getElementById('filterRegion');
+        const brSelect = document.getElementById('filterBranch');
+        const brandSelect = document.getElementById('filterBrand');
+        regSelect.innerHTML = data.regions.map(r => `<option value="${r}">${r === 'ALL' ? 'Semua Wilayah' : r}</option>`).join('');
+        brSelect.innerHTML = data.branches.map(b => `<option value="${b}">${b === 'ALL' ? 'Semua Cabang' : b}</option>`).join('');
+        brandSelect.innerHTML = data.brands.map(b => `<option value="${b}">${b === 'ALL' ? 'Semua Brand' : b}</option>`).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Tab 1: Overview
+    async function loadOverview() {
+      const start = document.getElementById('startDate').value;
+      const end = document.getElementById('endDate').value;
+      const reg = document.getElementById('filterRegion').value;
+      const br = document.getElementById('filterBranch').value;
+      const brand = document.getElementById('filterBrand').value;
+      const params = new URLSearchParams({ start_date: start, end_date: end, region: reg, branch: br, brand: brand });
+
+      try {
+        const res = await fetch(`${API_BASE}/dashboard/overview?${params}`, { headers: getHeaders() });
+        const d = await res.json();
+        totalPeriodNetSales = d.net_sales_idr;
+        document.getElementById('valNetSales').innerText = formatRupiah(d.net_sales_idr);
+        document.getElementById('valBudgetSales').innerText = formatRupiah(d.budget_net_sales_idr);
+        document.getElementById('valAchPct').innerText = d.achievement_pct + '%';
+        document.getElementById('valQtyCarton').innerText = Number(d.qty_carton).toLocaleString('id-ID') + ' Karton';
+        document.getElementById('valInvoices').innerText = Number(d.total_invoices).toLocaleString('id-ID');
+        document.getElementById('valDiscount').innerText = formatRupiah(d.discount_idr);
+        document.getElementById('valDiscountPct').innerText = d.discount_pct + '%';
+        document.getElementById('valCriticalStock').innerText = d.critical_stock_count + ' SKU';
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function loadCharts() {
+      const start = document.getElementById('startDate').value;
+      const end = document.getElementById('endDate').value;
+      const reg = document.getElementById('filterRegion').value;
+      const br = document.getElementById('filterBranch').value;
+      const brand = document.getElementById('filterBrand').value;
+      const params = new URLSearchParams({ start_date: start, end_date: end, region: reg, branch: br, brand: brand });
+
+      try {
+        const resTrend = await fetch(`${API_BASE}/dashboard/charts/daily-trend?${params}`, { headers: getHeaders() });
+        const dataTrend = await resTrend.json();
+        chartTrendInstance.setOption({
+          tooltip: { trigger: 'axis' },
+          grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+          xAxis: { type: 'category', data: dataTrend.map(d => d.date) },
+          yAxis: [{ type: 'value', name: 'Rupiah', axisLabel: { formatter: v => (v/1000000)+'Jt' } }],
+          series: [{ name: 'Net Sales', type: 'line', smooth: true, data: dataTrend.map(d => d.net_sales_idr), itemStyle: { color: '#dc2626' } }]
+        });
+
+        const resMix = await fetch(`${API_BASE}/dashboard/breakdown/outlet_type?${params}`, { headers: getHeaders() });
+        const dataMix = await resMix.json();
+        chartOutletInstance.setOption({
+          tooltip: { trigger: 'item', formatter: '{b}: Rp {c} ({d}%)' },
+          series: [{ type: 'pie', radius: ['40%', '70%'], data: dataMix.map(d => ({ name: d.name, value: d.net_sales_idr })) }]
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function loadBreakdown() {
+      const start = document.getElementById('startDate').value;
+      const end = document.getElementById('endDate').value;
+      const reg = document.getElementById('filterRegion').value;
+      const br = document.getElementById('filterBranch').value;
+      const brand = document.getElementById('filterBrand').value;
+      const params = new URLSearchParams({ start_date: start, end_date: end, region: reg, branch: br, brand: brand });
+
+      try {
+        const res = await fetch(`${API_BASE}/dashboard/breakdown/${currentDimension}?${params}`, { headers: getHeaders() });
+        const data = await res.json();
+        const tbody = document.getElementById('breakdownTableBody');
+        tbody.innerHTML = data.map(d => `
+          <tr class="hover:bg-slate-50">
+            <td class="py-2.5 px-4 font-bold">${d.name}</td>
+            <td class="py-2.5 px-4 text-right">${Number(d.qty_carton).toLocaleString('id-ID')}</td>
+            <td class="py-2.5 px-4 text-right text-amber-600">${formatRupiah(d.discount_idr)}</td>
+            <td class="py-2.5 px-4 text-right font-bold text-emerald-700">${formatRupiah(d.net_sales_idr)}</td>
+            <td class="py-2.5 px-4 text-right">${Number(d.invoices).toLocaleString('id-ID')}</td>
+            <td class="py-2.5 px-4 text-center"><span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold">${totalPeriodNetSales > 0 ? ((d.net_sales_idr/totalPeriodNetSales)*100).toFixed(1) : 0}%</span></td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Tab 2: Agent
+    async function dispatchToTeams() {
+      const webhook = prompt('Masukkan Microsoft Teams Incoming Webhook URL (atau biarkan kosong untuk antrean lokal):', '');
+      try {
+        const res = await fetch(`${API_BASE}/agent/send-teams`, {
+          method: 'POST',
+          headers: { ...getHeaders(), 'Content-Type': 'application/json' },
+          body: JSON.stringify({ webhook_url: webhook })
+        });
+        const d = await res.json();
+        alert(`Status Pengiriman: ${d.dispatch_details.status}\n\nPenerima: ${d.dispatch_details.recipient_name} (${d.dispatch_details.recipient_email})\nSaluran: ${d.dispatch_details.delivery_channel}\nCatatan: ${d.dispatch_details.note || 'Berhasil dikirim ke Webhook Teams'}`);
+      } catch (e) {
+        alert('Gagal mengirim: ' + e);
+      }
+    }
+
+    async function loadAgentPreview() {
+      try {
+        const res = await fetch(`${API_BASE}/agent/preview-summary`, { headers: getHeaders() });
+        const d = await res.json();
+        document.getElementById('cardRecipient').innerText = d.adaptive_card.body[0].items[1].text;
+        document.getElementById('cardNarrative').innerText = d.narrative;
+        
+        const factList = document.getElementById('cardFactList');
+        factList.innerHTML = d.adaptive_card.body[2].facts.map(f => `
+          <div class="flex justify-between"><span class="text-slate-500">${f.title}</span><span class="font-bold text-slate-800">${f.value}</span></div>
+        `).join('');
+
+        document.getElementById('agentVerificationStatus').innerHTML = d.verification_passed
+          ? `<span class="font-bold text-emerald-700">Lolos 100%:</span> Seluruh angka terverifikasi cocok dengan database.`
+          : `<span class="font-bold text-amber-700">Fallback Template Baku:</span> Sistem beralih ke template deterministik untuk akurasi data.`;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Tab 3: Forecast
+    async function loadForecast() {
+      try {
+        const res = await fetch(`${API_BASE}/forecast/demand?horizon_days=14`, { headers: getHeaders() });
+        const d = await res.json();
+        
+        chartForecastInstance.setOption({
+          tooltip: { trigger: 'axis' },
+          legend: { data: ['Proyeksi Volume (Karton)', 'Rentang Atas', 'Rentang Bawah'], top: 0 },
+          xAxis: { type: 'category', data: d.forecast.map(f => f.date) },
+          yAxis: { type: 'value', name: 'Karton' },
+          series: [
+            { name: 'Proyeksi Volume (Karton)', type: 'line', smooth: true, data: d.forecast.map(f => f.projected_qty_carton), itemStyle: { color: '#2563eb' } },
+            { name: 'Rentang Atas', type: 'line', data: d.forecast.map(f => f.confidence_upper_qty), lineStyle: { type: 'dashed' }, itemStyle: { color: '#93c5fd' } },
+            { name: 'Rentang Bawah', type: 'line', data: d.forecast.map(f => f.confidence_lower_qty), lineStyle: { type: 'dashed' }, itemStyle: { color: '#93c5fd' } }
+          ]
+        });
+
+        const tbody = document.getElementById('forecastRisksTableBody');
+        tbody.innerHTML = d.stockout_risks.map(r => `
+          <tr class="hover:bg-amber-50/40">
+            <td class="py-2.5 px-4 font-semibold">${r.branch} (${r.warehouse_id})</td>
+            <td class="py-2.5 px-4">${r.brand}</td>
+            <td class="py-2.5 px-4 font-bold">${r.sku}</td>
+            <td class="py-2.5 px-4 text-right">${r.on_hand} Karton</td>
+            <td class="py-2.5 px-4 text-right font-bold text-red-600">${r.days_remaining} Hari Lagi</td>
+            <td class="py-2.5 px-4 text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${r.urgency==='TINGGI'?'bg-red-100 text-red-700':'bg-amber-100 text-amber-700'}">${r.urgency}</span></td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Tab 4: e-Sign (HOD Multi-Tier Workflow)
+    async function seedEsignDemo() {
+      try {
+        await fetch(`${API_BASE}/esign/seed-demo`, { method: 'POST' });
+        await loadEsignDocs();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function promptCreateHodDoc() {
+      const title = prompt("Judul Pengajuan Dokumen:", "Pengajuan Diskon Spesial Distributor Q4");
+      if (!title) return;
+      const amount = prompt("Nilai Estimasi Transaksi (Rp):", "50000000");
+      
+      const payload = {
+        title: title,
+        department: "SALES",
+        doc_type: "HOD_APPROVAL",
+        file_name: "pengajuan_otorisasi.pdf",
+        amount_idr: parseFloat(amount) || 0,
+        target_departments: ["SALES", "MARKETING", "FINANCE"]
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/esign/hod-documents`, {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify(payload)
+        });
+        const d = await res.json();
+        alert(`Dokumen HOD Berhasil Dibuat!\nID: ${d.id}\nTarget Otorisasi: Sales -> Marketing -> Finance`);
+        await loadEsignDocs();
+      } catch (e) {
+        alert("Gagal membuat dokumen: " + e);
+      }
+    }
+
+    async function loadEsignDocs() {
+      try {
+        const res = await fetch(`${API_BASE}/esign/documents`);
+        const docs = await res.json();
+        const container = document.getElementById('esignDocumentList');
+        if (!docs || docs.length === 0) {
+          container.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs">Belum ada dokumen pengajuan tanda tangan. Klik "Reset Demo Dokumen" untuk mengisi contoh.</div>`;
+          return;
+        }
+
+        const currentEmail = document.getElementById('personaSelect').value;
+
+        container.innerHTML = docs.map(d => {
+          const signersHtml = (d.signers || []).map(s => {
+            let badgeClass = "bg-slate-100 text-slate-500 border border-slate-200";
+            let icon = "fa-clock";
+            if (s.status === 'SIGNED') {
+              badgeClass = "bg-emerald-50 text-emerald-700 border border-emerald-300 font-bold";
+              icon = "fa-check";
+            } else if (s.status === 'CURRENT') {
+              badgeClass = "bg-amber-100 text-amber-800 border border-amber-300 font-bold animate-pulse";
+              icon = "fa-hourglass-half";
+            }
+
+            return `
+              <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded text-xs ${badgeClass}">
+                <i class="fa-solid ${icon}"></i>
+                <span>${s.step_order}. ${s.role_title}</span>
+                <span class="text-[10px] text-slate-400">(${s.department})</span>
+              </div>
+            `;
+          }).join('<span class="text-slate-300 font-bold">&rarr;</span>');
+
+          // Cek apakah user persona saat ini berhak tanda tangan di langkah aktif
+          const canSignNow = (d.signers || []).some(s => s.signer_email === currentEmail && s.status === 'CURRENT');
+
+          return `
+            <div class="border border-slate-200 rounded-xl p-5 bg-white shadow-sm hover:shadow transition space-y-3">
+              <div class="flex flex-wrap justify-between items-start gap-3">
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <span class="px-2.5 py-0.5 rounded text-xs font-black uppercase tracking-wider ${d.status==='COMPLETED'?'bg-emerald-100 text-emerald-800':'bg-blue-100 text-blue-800'}">
+                      ${d.status === 'COMPLETED' ? '<i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i>SELESAI (SAH)' : `<i class="fa-solid fa-spinner fa-spin mr-1"></i>PROGRES: STEP ${d.current_step}/${d.total_steps}`}
+                    </span>
+                    <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-700 uppercase">${d.department}</span>
+                    <h3 class="text-sm font-bold text-slate-900">${d.title}</h3>
+                  </div>
+                  <div class="text-xs text-slate-500 font-mono mt-1 flex items-center space-x-2">
+                    <span class="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">SHA-256: ${d.sha256_hash.substring(0, 24)}...</span>
+                    ${d.amount_idr ? `<span class="text-slate-700 font-semibold">Nilai: Rp ${Number(d.amount_idr).toLocaleString('id-ID')}</span>` : ''}
+                  </div>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                  ${canSignNow ? `
+                    <button onclick="signDoc('${d.id}')" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow animate-bounce">
+                      <i class="fa-solid fa-signature mr-1.5"></i>Tandatangani Sebagai HOD Aktif
+                    </button>
+                  ` : (d.status !== 'COMPLETED' ? `
+                    <span class="text-xs text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 font-medium">
+                      <i class="fa-solid fa-lock mr-1"></i>Menunggu Giliran Penandatangan
+                    </span>
+                  ` : `
+                    <span class="text-xs text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 font-bold">
+                      <i class="fa-solid fa-certificate mr-1"></i>Sertifikat Digital Valid
+                    </span>
+                  `)}
+                </div>
+              </div>
+
+              <!-- Workflow Stepper -->
+              <div class="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-2">
+                <span class="text-xs text-slate-400 font-medium mr-1">Alur Persetujuan:</span>
+                ${signersHtml}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function signDoc(id) {
+      try {
+        const res = await fetch(`${API_BASE}/esign/documents/${id}/sign`, { method: 'POST', headers: getHeaders() });
+        const d = await res.json();
+        if (d.success) {
+          alert(`Sukses! ${d.message}\nStatus Dokumen: ${d.document_status}`);
+        } else {
+          alert(`Gagal: ${d.message}`);
+        }
+        await loadEsignDocs();
+      } catch (e) {
+        alert("Gagal memproses tanda tangan: " + e);
+      }
+    }
+
+
+    // Tab 5: WMS FEFO
+    async function checkFefo() {
+      const wh = document.getElementById('wmsWarehouse').value;
+      const sku = document.getElementById('wmsSku').value;
+      const qty = document.getElementById('wmsQty').value;
+      try {
+        const res = await fetch(`${API_BASE}/wms/fefo-recommendation?warehouse_id=${wh}&sku=${encodeURIComponent(sku)}&qty=${qty}`);
+        const d = await res.json();
+        const list = document.getElementById('wmsAllocationsList');
+        if (!d.fefo_allocations || d.fefo_allocations.length === 0) {
+          list.innerHTML = `<div class="text-red-600 font-semibold">Tidak ditemukan stok tersedia untuk produk ini di gudang terkait.</div>`;
+          return;
+        }
+        list.innerHTML = d.fefo_allocations.map(a => `
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center">
+            <div>
+              <span class="font-bold text-slate-800">Batch: ${a.batch_no}</span>
+              <span class="text-slate-500 ml-2">&bull; Kedaluwarsa: <strong class="text-red-600">${a.expiry_date}</strong></span>
+              <span class="text-slate-400 ml-2">(Tersedia di rak: ${a.available} karton)</span>
+            </div>
+            <div class="text-right">
+              <span class="px-2.5 py-1 bg-purple-100 text-purple-800 font-bold rounded">Ambil: ${a.allocated_qty} Karton</span>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Init All
+    document.addEventListener('DOMContentLoaded', async () => {
+      chartTrendInstance = echarts.init(document.getElementById('chartDailyTrend'));
+      chartOutletInstance = echarts.init(document.getElementById('chartOutletMix'));
+      chartForecastInstance = echarts.init(document.getElementById('chartForecast'));
+
+      await loadFilterOptions();
+      await loadOverview();
+      await loadCharts();
+      await loadBreakdown();
+      await loadAgentPreview();
+      await loadForecast();
+      await loadEsignDocs();
+      await checkFefo();
+
+      document.getElementById('btnApplyFilter').addEventListener('click', async () => {
+        await loadOverview();
+        await loadCharts();
+        await loadBreakdown();
+      });
+
+      document.getElementById('personaSelect').addEventListener('change', async () => {
+        await loadFilterOptions();
+        await loadOverview();
+        await loadCharts();
+        await loadBreakdown();
+        await loadAgentPreview();
+        await loadForecast();
+      });
+
+      document.getElementById('btnRefreshAgent').addEventListener('click', loadAgentPreview);
+      document.getElementById('btnCheckFefo').addEventListener('click', checkFefo);
+
+      document.getElementById('btnNewEsignDoc').addEventListener('click', async () => {
+        await fetch(`${API_BASE}/esign/documents`, {
+          method: 'POST',
+          headers: { ...getHeaders(), 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: "Pengajuan Pengiriman Darurat Depo Jawa Barat",
+            doc_type: "MEMO",
+            file_name: "pengiriman_darurat.pdf"
+          })
+        });
+        await loadEsignDocs();
+      });
+
+      document.querySelectorAll('.btn-dim').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.btn-dim').forEach(b => {
+            b.classList.remove('bg-red-600', 'text-white');
+            b.classList.add('bg-white', 'text-slate-700');
+          });
+          btn.classList.remove('bg-white', 'text-slate-700');
+          btn.classList.add('bg-red-600', 'text-white');
+          currentDimension = btn.getAttribute('data-dim');
+          document.getElementById('breakdownTitle').innerText = `Rincian Kinerja Berdasarkan ${btn.innerText}`;
+          loadBreakdown();
+        });
+      });
+    });
+  </script>
+</body>
+</html>

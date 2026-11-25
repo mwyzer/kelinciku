@@ -1,0 +1,60 @@
+# Node & Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.vercel/
+frontend/.env.local
+frontend/.env.*.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+# Python & FastAPI
+backend/__pycache__/
+backend/*/__pycache__/
+backend/*/*/__pycache__/
+backend/.pytest_cache/
+backend/venv/
+backend/.venv/
+backend/env/
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+backend/.coverage
+backend/htmlcov/
+backend/.mypy_cache/
+
+# Databases & Local state
+backend/*.db
+backend/*.sqlite3
+backend/*.sqlite
+*.db
+*.sqlite
+*.sqlite3
+postgres_data/
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.cert
+
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# Docker logs & temporary caches
+*.log
+npm-debug.log*
+docker-compose.override.yml

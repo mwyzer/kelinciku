@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Analytics & Telegram Brief — PT Dua Kelinci</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .badge-telegram { background-color: #229ED9; color: white; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+  <!-- Topbar -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white font-black text-xl shadow-md shadow-red-200">
+          2K
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">Sales Analytics &amp; Telegram Executive Brief</h1>
+          <p class="text-xs text-slate-500 font-medium">Periode: September &ndash; Oktober 2026 &bull; PT Dua Kelinci</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 flex items-center">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1.5 animate-pulse"></span>1,891 Baris Data
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- KPI Summary Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div class="text-xs font-semibold text-slate-500 uppercase">Total Net Sales</div>
+        <div class="text-xl sm:text-2xl font-black text-slate-900 mt-1">Rp 1.725.966.000</div>
+        <div class="text-xs text-slate-400 mt-1">6 Wilayah Operasional</div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div class="text-xs font-semibold text-slate-500 uppercase">Total Volume</div>
+        <div class="text-xl sm:text-2xl font-black text-slate-900 mt-1">8.745 Karton</div>
+        <div class="text-xs text-slate-400 mt-1">8 Brand Portofolio</div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div class="text-xs font-semibold text-slate-500 uppercase">Region Terbesar</div>
+        <div class="text-xl sm:text-2xl font-black text-red-600 mt-1">Jabodetabek</div>
+        <div class="text-xs text-slate-500 mt-1">Rp 495,8 Jt (28,7%)</div>
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <div class="text-xs font-semibold text-slate-500 uppercase">Brand Terbesar</div>
+        <div class="text-xl sm:text-2xl font-black text-blue-600 mt-1">Kacang 2 Kelinci</div>
+        <div class="text-xs text-slate-500 mt-1">Rp 739,8 Jt (42,9%)</div>
+      </div>
+    </div>
+
+    <!-- Ringkasan Eksekutif Telegram Card -->
+    <div class="bg-gradient-to-r from-sky-900 to-slate-900 text-white rounded-2xl p-6 shadow-md border border-sky-800 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-lg badge-telegram flex items-center justify-center text-white shadow">
+            <i class="fa-brands fa-telegram text-xl"></i>
+          </div>
+          <div>
+            <h2 class="text-sm sm:text-base font-bold">Ringkasan Eksekutif Telegram (Target: <span class="text-sky-300 font-mono">@mwyzer</span>)</h2>
+            <p class="text-xs text-sky-200">Tersedia tombol kirim langsung via Telegram Web / App atau salin teks</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <a id="btnSendTelegram" href="https://t.me/mwyzer" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition flex items-center space-x-1.5 shadow">
+            <i class="fa-solid fa-paper-plane"></i><span>Buka Chat @mwyzer</span>
+          </a>
+          <button onclick="shareDirectTelegram()" class="bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition flex items-center space-x-1.5 shadow">
+            <i class="fa-brands fa-telegram"></i><span>Kirim ke Telegram</span>
+          </button>
+          <button onclick="copyTelegramText()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition flex items-center space-x-1.5 shadow">
+            <i class="fa-regular fa-copy"></i><span id="copyBtnText">Salin Teks</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-slate-950/70 p-4 rounded-xl border border-sky-700/50 text-xs sm:text-sm leading-relaxed font-sans text-sky-50" id="telegramContent">
+Kepada Yth. <strong>@mwyzer</strong> (Head of Sales PT Dua Kelinci),
+
+📊 <strong>Ringkasan Eksekutif Kinerja Penjualan (Sep–Okt 2026):</strong> Total realisasi penjualan bersih tercatat mencapai <strong>Rp 1,73 Miliar</strong> (8.745 karton) dari 42 outlet aktif nasional. Wilayah <strong>Jabodetabek</strong> memimpin sebagai kontributor tertinggi senilai <strong>Rp 495,8 Juta (28,7%)</strong> disusul Sumatera dan Jawa Barat, didorong dominasi brand <strong>Kacang Dua Kelinci</strong> sebesar <strong>Rp 739,8 Juta (42,9%)</strong> diikuti Tos Tos dan Sukro. Namun demikian, perhatian mendesak dan arahan Bapak @mwyzer diperlukan untuk mengintervensi <strong>5 outlet dengan penjualan terlemah</strong>—khususnya <em>Warung Maju Lancar (Malang, Jatim: Rp 1,1 Jt)</em>, <em>Warung Sumber Makmur (Banjarmasin: Rp 7,0 Jt)</em>, <em>Toko Mekar (Banjarmasin: Rp 7,6 Jt)</em>, <em>Warung Murah Meriah (Cirebon: Rp 8,1 Jt)</em>, dan <em>Minimarket Berkah (Bandung: Rp 9,0 Jt)</em>—agar tim sales lapangan segera melakukan audit rute kunjungan, penambahan stok display SKU favorit, serta evaluasi batas kredit toko.
+      </div>
+
+      <!-- Kotak Pengiriman Otomatis via BotFather -->
+      <div class="bg-slate-900/90 p-4 rounded-xl border border-sky-800 text-xs space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sky-300 flex items-center">
+            <i class="fa-solid fa-robot mr-1.5 text-sky-400"></i>Kirim Otomatis Menggunakan Bot Telegram (BotFather)
+          </span>
+          <span class="text-[11px] text-slate-400">API: api.telegram.org</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 text-[11px] mb-1">Bot Token (dari @BotFather):</label>
+            <input type="password" id="inputBotToken" placeholder="Contoh: 123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-sky-500 font-mono text-xs">
+          </div>
+          <div>
+            <label class="block text-slate-400 text-[11px] mb-1">Chat ID / Username Penerima (Contoh: @mwyzer atau ID angka):</label>
+            <input type="text" id="inputChatId" value="@mwyzer" placeholder="@mwyzer atau 123456789" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-sky-500 font-mono text-xs">
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-1">
+          <span class="text-[11px] text-slate-400">Belum punya bot? Cukup buka Telegram &rarr; cari <strong>@BotFather</strong> &rarr; kirim <code>/newbot</code></span>
+          <button onclick="sendViaBotFather()" id="btnSendBot" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-4 py-1.5 rounded-lg shadow transition flex items-center space-x-1.5">
+            <i class="fa-solid fa-paper-plane"></i><span>Kirim via Bot Sekarang</span>
+          </button>
+        </div>
+        <div id="botSendAlert" class="hidden text-xs p-2.5 rounded-lg"></div>
+      </div>
+    </div>
+
+    <!-- Charts Row: Penjualan per Region & Brand -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- Chart Region -->
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <h3 class="text-sm font-bold text-slate-800 flex items-center">
+            <i class="fa-solid fa-map-location-dot text-red-600 mr-2"></i>Penjualan Bersih per Region
+          </h3>
+          <span class="text-xs text-slate-400">Total 6 Wilayah</span>
+        </div>
+        <div id="chartRegion" style="height: 300px; width: 100%;"></div>
+      </div>
+
+      <!-- Chart Brand -->
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <h3 class="text-sm font-bold text-slate-800 flex items-center">
+            <i class="fa-solid fa-tags text-blue-600 mr-2"></i>Penjualan Bersih per Brand
+          </h3>
+          <span class="text-xs text-slate-400">Total 8 Brand</span>
+        </div>
+        <div id="chartBrand" style="height: 300px; width: 100%;"></div>
+      </div>
+
+    </div>
+
+    <!-- 5 Outlet Terlemah Section -->
+    <div class="bg-white rounded-xl border border-red-200 shadow-sm overflow-hidden">
+      <div class="p-4 bg-red-50 border-b border-red-200 flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h3 class="text-sm font-bold text-red-900 flex items-center">
+            <i class="fa-solid fa-triangle-exclamation text-red-600 mr-2"></i>5 Outlet dengan Penjualan Terendah (Perlu Intervensi Sales)
+          </h3>
+          <p class="text-xs text-red-700 mt-0.5">Disaring dari seluruh 42 outlet aktif selama periode 2 bulan penuh.</p>
+        </div>
+        <span class="px-2.5 py-1 bg-red-600 text-white font-bold text-xs rounded-lg">Prioritas Kunjungan</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200 text-left text-xs">
+          <thead class="bg-slate-50 text-slate-600 font-bold uppercase">
+            <tr>
+              <th class="py-3 px-4">Peringkat</th>
+              <th class="py-3 px-4">Nama Outlet</th>
+              <th class="py-3 px-4">Tipe Outlet</th>
+              <th class="py-3 px-4">Cabang</th>
+              <th class="py-3 px-4">Wilayah</th>
+              <th class="py-3 px-4 text-right">Volume</th>
+              <th class="py-3 px-4 text-right">Total Net Sales</th>
+              <th class="py-3 px-4 text-center">Status / Rekomendasi Tindakan</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700 font-medium">
+            <tr class="bg-red-50/50 hover:bg-red-50 transition">
+              <td class="py-3 px-4 font-bold text-red-600">#1 (Terendah)</td>
+              <td class="py-3 px-4 font-bold text-slate-900">Warung Maju Lancar</td>
+              <td class="py-3 px-4">Warung</td>
+              <td class="py-3 px-4">Malang</td>
+              <td class="py-3 px-4">Jawa Timur</td>
+              <td class="py-3 px-4 text-right">5 Karton</td>
+              <td class="py-3 px-4 text-right font-black text-red-600">Rp 1.122.000</td>
+              <td class="py-3 px-4 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-100 text-red-800">Kritis &bull; Audit Salesman Malang</span></td>
+            </tr>
+            <tr class="hover:bg-amber-50/50 transition">
+              <td class="py-3 px-4 font-bold text-amber-600">#2</td>
+              <td class="py-3 px-4 font-bold text-slate-900">Warung Sumber Makmur</td>
+              <td class="py-3 px-4">Warung</td>
+              <td class="py-3 px-4">Banjarmasin</td>
+              <td class="py-3 px-4">Kalimantan</td>
+              <td class="py-3 px-4 text-right">33 Karton</td>
+              <td class="py-3 px-4 text-right font-black text-amber-700">Rp 6.974.500</td>
+              <td class="py-3 px-4 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800">Follow-up Call Route Banjarmasin</span></td>
+            </tr>
+            <tr class="hover:bg-amber-50/50 transition">
+              <td class="py-3 px-4 font-bold text-amber-600">#3</td>
+              <td class="py-3 px-4 font-bold text-slate-900">Toko Mekar</td>
+              <td class="py-3 px-4">Toko Kelontong</td>
+              <td class="py-3 px-4">Banjarmasin</td>
+              <td class="py-3 px-4">Kalimantan</td>
+              <td class="py-3 px-4 text-right">42 Karton</td>
+              <td class="py-3 px-4 text-right font-black text-amber-700">Rp 7.617.600</td>
+              <td class="py-3 px-4 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800">Tingkatkan Mix SKU (Sukro/TicTac)</span></td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="py-3 px-4 font-bold text-slate-500">#4</td>
+              <td class="py-3 px-4 font-bold text-slate-900">Warung Murah Meriah</td>
+              <td class="py-3 px-4">Warung</td>
+              <td class="py-3 px-4">Cirebon</td>
+              <td class="py-3 px-4">Jawa Barat</td>
+              <td class="py-3 px-4 text-right">37 Karton</td>
+              <td class="py-3 px-4 text-right font-bold text-slate-900">Rp 8.050.600</td>
+              <td class="py-3 px-4 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-700">Cek Display Warung &amp; Ketersediaan</span></td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="py-3 px-4 font-bold text-slate-500">#5</td>
+              <td class="py-3 px-4 font-bold text-slate-900">Minimarket Berkah</td>
+              <td class="py-3 px-4">Minimarket</td>
+              <td class="py-3 px-4">Bandung</td>
+              <td class="py-3 px-4">Jawa Barat</td>
+              <td class="py-3 px-4 text-right">52 Karton</td>
+              <td class="py-3 px-4 text-right font-bold text-slate-900">Rp 8.955.400</td>
+              <td class="py-3 px-4 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-700">Optimasi Rak Modern Trade Bandung</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Data Dinamis Hasil Query Database
+    const regionData = [
+      { name: "Jabodetabek", value: 495827800 },
+      { name: "Sumatera", value: 340690500 },
+      { name: "Jawa Barat", value: 310947300 },
+      { name: "Jawa Tengah", value: 222881500 },
+      { name: "Jawa Timur", value: 211378500 },
+      { name: "Kalimantan", value: 144240400 }
+    ];
+
+    const brandData = [
+      { name: "Kacang Dua Kelinci", value: 739781900 },
+      { name: "Tos Tos", value: 285909300 },
+      { name: "Sukro", value: 271738100 },
+      { name: "Tic Tac", value: 187336900 },
+      { name: "Deka", value: 91197500 },
+      { name: "Pilus", value: 71659900 },
+      { name: "Usagi", value: 43943200 },
+      { name: "Roni", value: 34399200 }
+    ];
+
+    // Inisialisasi ECharts Region (Bar Chart Horizontal)
+    const chartRegion = echarts.init(document.getElementById('chartRegion'));
+    chartRegion.setOption({
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        formatter: (params) => {
+          const val = params[0].value;
+          return `${params[0].name}: <strong>Rp ${val.toLocaleString('id-ID')}</strong>`;
+        }
+      },
+      grid: { left: '3%', right: '8%', bottom: '3%', top: '5%', containLabel: true },
+      xAxis: {
+        type: 'value',
+        axisLabel: { formatter: v => (v / 1000000) + ' Jt' }
+      },
+      yAxis: {
+        type: 'category',
+        data: regionData.map(r => r.name).reverse()
+      },
+      series: [{
+        name: 'Net Sales',
+        type: 'bar',
+        data: regionData.map(r => r.value).reverse(),
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+            { offset: 0, color: '#dc2626' },
+            { offset: 1, color: '#f87171' }
+          ]),
+          borderRadius: [0, 4, 4, 0]
+        },
+        label: {
+          show: true,
+          position: 'right',
+          formatter: v => 'Rp ' + (v.value / 1000000).toFixed(1) + 'Jt',
+          fontSize: 10
+        }
+      }]
+    });
+
+    // Inisialisasi ECharts Brand (Pie / Donut Chart)
+    const chartBrand = echarts.init(document.getElementById('chartBrand'));
+    chartBrand.setOption({
+      tooltip: {
+        trigger: 'item',
+        formatter: '{b}: <strong>Rp {c}</strong> ({d}%)'
+      },
+      legend: { orient: 'vertical', right: 5, top: 'middle', textStyle: { fontSize: 11 } },
+      series: [{
+        name: 'Brand Sales',
+        type: 'pie',
+        radius: ['45%', '75%'],
+        center: ['38%', '50%'],
+        avoidLabelOverlap: false,
+        itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+        label: { show: false },
+        data: brandData
+      }]
+    });
+
+    window.addEventListener('resize', () => {
+      chartRegion.resize();
+      chartBrand.resize();
+    });
+
+    // Salin Teks Telegram
+    function copyTelegramText() {
+      const text = document.getElementById('telegramContent').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtnText');
+        btn.innerText = "Tersalin ke Clipboard!";
+        setTimeout(() => { btn.innerText = "Salin Teks"; }, 2500);
+      });
+    }
+
+    // Bagikan Langsung ke Telegram
+    function shareDirectTelegram() {
+      const text = document.getElementById('telegramContent').innerText;
+      const shareUrl = `https://t.me/share/url?url=${encodeURIComponent('https://duakelinci.id')}&text=${encodeURIComponent(text)}`;
+      window.open(shareUrl, '_blank');
+    }
+
+    // Kirim via BotFather API
+    async function sendViaBotFather() {
+      const token = document.getElementById('inputBotToken').value.trim();
+      const chatId = document.getElementById('inputChatId').value.trim();
+      const text = document.getElementById('telegramContent').innerText;
+      const alertBox = document.getElementById('botSendAlert');
+      const btn = document.getElementById('btnSendBot');
+
+      if (!token) {
+        alert("Silakan masukkan Bot Token terlebih dahulu (diperoleh dari @BotFather di Telegram).");
+        return;
+      }
+      if (!chatId) {
+        alert("Silakan masukkan Chat ID atau Username penerima.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i>Mengirim...`;
+      alertBox.className = "hidden";
+
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/v1/telegram/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bot_token: token, chat_id: chatId, text: text })
+        });
+        const d = await res.json();
+        alertBox.classList.remove('hidden');
+
+        if (d.success) {
+          alertBox.className = "text-xs p-2.5 rounded-lg bg-emerald-950/80 border border-emerald-600 text-emerald-200";
+          alertBox.innerHTML = `<strong>Pesan Berhasil Terkirim!</strong> Pesan laporan sales telah diterima oleh Telegram ID: <code>${chatId}</code>.`;
+        } else {
+          alertBox.className = "text-xs p-2.5 rounded-lg bg-red-950/80 border border-red-600 text-red-200";
+          alertBox.innerHTML = `<strong>Gagal Mengirim:</strong> ${d.error || 'Pastikan token benar dan penerima sudah menekan /start pada bot.'}`;
+        }
+      } catch (e) {
+        alertBox.classList.remove('hidden');
+        alertBox.className = "text-xs p-2.5 rounded-lg bg-red-950/80 border border-red-600 text-red-200";
+        alertBox.innerHTML = `<strong>Koneksi Error:</strong> ${e}`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-paper-plane mr-1.5"></i>Kirim via Bot Sekarang`;
+      }
+    }
+
+
+  </script>
+</body>
+</html>

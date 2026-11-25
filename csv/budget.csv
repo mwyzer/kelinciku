@@ -1,0 +1,417 @@
+period_month,entity_code,region,branch,brand,sku,budget_qty_carton,budget_net_sales_idr
+2026-09,ID01,Jabodetabek,Bekasi,Deka,,9,1800000
+2026-10,ID01,Jabodetabek,Bekasi,Deka,,8,1800000
+2026-11,ID01,Jabodetabek,Bekasi,Deka,,9,1800000
+2026-12,ID01,Jabodetabek,Bekasi,Deka,,9,1900000
+2026-09,ID01,Jabodetabek,Bekasi,Kacang Dua Kelinci,,83,19100000
+2026-10,ID01,Jabodetabek,Bekasi,Kacang Dua Kelinci,,86,19600000
+2026-11,ID01,Jabodetabek,Bekasi,Kacang Dua Kelinci,,91,21000000
+2026-12,ID01,Jabodetabek,Bekasi,Kacang Dua Kelinci,,91,20900000
+2026-09,ID01,Jabodetabek,Bekasi,Pilus,,4,700000
+2026-10,ID01,Jabodetabek,Bekasi,Pilus,,4,700000
+2026-11,ID01,Jabodetabek,Bekasi,Pilus,,4,700000
+2026-12,ID01,Jabodetabek,Bekasi,Pilus,,4,700000
+2026-09,ID01,Jabodetabek,Bekasi,Roni,,6,700000
+2026-10,ID01,Jabodetabek,Bekasi,Roni,,6,700000
+2026-11,ID01,Jabodetabek,Bekasi,Roni,,6,700000
+2026-12,ID01,Jabodetabek,Bekasi,Roni,,6,700000
+2026-09,ID01,Jabodetabek,Bekasi,Sukro,,22,4100000
+2026-10,ID01,Jabodetabek,Bekasi,Sukro,,22,3900000
+2026-11,ID01,Jabodetabek,Bekasi,Sukro,,24,4300000
+2026-12,ID01,Jabodetabek,Bekasi,Sukro,,24,4300000
+2026-09,ID01,Jabodetabek,Bekasi,Tic Tac,,25,4200000
+2026-10,ID01,Jabodetabek,Bekasi,Tic Tac,,25,4200000
+2026-11,ID01,Jabodetabek,Bekasi,Tic Tac,,26,4300000
+2026-12,ID01,Jabodetabek,Bekasi,Tic Tac,,28,4600000
+2026-09,ID01,Jabodetabek,Bekasi,Tos Tos,,32,7100000
+2026-10,ID01,Jabodetabek,Bekasi,Tos Tos,,32,7000000
+2026-11,ID01,Jabodetabek,Bekasi,Tos Tos,,31,6800000
+2026-12,ID01,Jabodetabek,Bekasi,Tos Tos,,34,7400000
+2026-09,ID01,Jabodetabek,Bekasi,Usagi,,9,1200000
+2026-10,ID01,Jabodetabek,Bekasi,Usagi,,10,1400000
+2026-11,ID01,Jabodetabek,Bekasi,Usagi,,10,1400000
+2026-12,ID01,Jabodetabek,Bekasi,Usagi,,10,1400000
+2026-09,ID01,Jabodetabek,Jakarta Barat,Deka,,31,6500000
+2026-10,ID01,Jabodetabek,Jakarta Barat,Deka,,31,6600000
+2026-11,ID01,Jabodetabek,Jakarta Barat,Deka,,32,6900000
+2026-12,ID01,Jabodetabek,Jakarta Barat,Deka,,34,7200000
+2026-09,ID01,Jabodetabek,Jakarta Barat,Kacang Dua Kelinci,,181,37400000
+2026-10,ID01,Jabodetabek,Jakarta Barat,Kacang Dua Kelinci,,170,35100000
+2026-11,ID01,Jabodetabek,Jakarta Barat,Kacang Dua Kelinci,,183,37800000
+2026-12,ID01,Jabodetabek,Jakarta Barat,Kacang Dua Kelinci,,192,39600000
+2026-09,ID01,Jabodetabek,Jakarta Barat,Pilus,,29,5000000
+2026-10,ID01,Jabodetabek,Jakarta Barat,Pilus,,29,4900000
+2026-11,ID01,Jabodetabek,Jakarta Barat,Pilus,,28,4900000
+2026-12,ID01,Jabodetabek,Jakarta Barat,Pilus,,29,5000000
+2026-09,ID01,Jabodetabek,Jakarta Barat,Roni,,14,1700000
+2026-10,ID01,Jabodetabek,Jakarta Barat,Roni,,16,1900000
+2026-11,ID01,Jabodetabek,Jakarta Barat,Roni,,16,1900000
+2026-12,ID01,Jabodetabek,Jakarta Barat,Roni,,15,1800000
+2026-09,ID01,Jabodetabek,Jakarta Barat,Sukro,,71,13100000
+2026-10,ID01,Jabodetabek,Jakarta Barat,Sukro,,77,14100000
+2026-11,ID01,Jabodetabek,Jakarta Barat,Sukro,,75,13700000
+2026-12,ID01,Jabodetabek,Jakarta Barat,Sukro,,79,14400000
+2026-09,ID01,Jabodetabek,Jakarta Barat,Tic Tac,,71,11700000
+2026-10,ID01,Jabodetabek,Jakarta Barat,Tic Tac,,72,11900000
+2026-11,ID01,Jabodetabek,Jakarta Barat,Tic Tac,,77,12800000
+2026-12,ID01,Jabodetabek,Jakarta Barat,Tic Tac,,78,12900000
+2026-09,ID01,Jabodetabek,Jakarta Barat,Tos Tos,,41,8700000
+2026-10,ID01,Jabodetabek,Jakarta Barat,Tos Tos,,44,9200000
+2026-11,ID01,Jabodetabek,Jakarta Barat,Tos Tos,,46,9700000
+2026-12,ID01,Jabodetabek,Jakarta Barat,Tos Tos,,47,9800000
+2026-09,ID01,Jabodetabek,Jakarta Barat,Usagi,,6,800000
+2026-10,ID01,Jabodetabek,Jakarta Barat,Usagi,,6,800000
+2026-11,ID01,Jabodetabek,Jakarta Barat,Usagi,,6,900000
+2026-12,ID01,Jabodetabek,Jakarta Barat,Usagi,,6,900000
+2026-09,ID01,Jabodetabek,Tangerang,Deka,,22,4800000
+2026-10,ID01,Jabodetabek,Tangerang,Deka,,24,5200000
+2026-11,ID01,Jabodetabek,Tangerang,Deka,,23,5000000
+2026-12,ID01,Jabodetabek,Tangerang,Deka,,25,5300000
+2026-09,ID01,Jabodetabek,Tangerang,Kacang Dua Kelinci,,240,52100000
+2026-10,ID01,Jabodetabek,Tangerang,Kacang Dua Kelinci,,265,57400000
+2026-11,ID01,Jabodetabek,Tangerang,Kacang Dua Kelinci,,261,56600000
+2026-12,ID01,Jabodetabek,Tangerang,Kacang Dua Kelinci,,268,58100000
+2026-09,ID01,Jabodetabek,Tangerang,Pilus,,26,4400000
+2026-10,ID01,Jabodetabek,Tangerang,Pilus,,25,4300000
+2026-11,ID01,Jabodetabek,Tangerang,Pilus,,28,4800000
+2026-12,ID01,Jabodetabek,Tangerang,Pilus,,26,4500000
+2026-09,ID01,Jabodetabek,Tangerang,Roni,,44,5100000
+2026-10,ID01,Jabodetabek,Tangerang,Roni,,45,5300000
+2026-11,ID01,Jabodetabek,Tangerang,Roni,,49,5700000
+2026-12,ID01,Jabodetabek,Tangerang,Roni,,46,5500000
+2026-09,ID01,Jabodetabek,Tangerang,Sukro,,108,19800000
+2026-10,ID01,Jabodetabek,Tangerang,Sukro,,111,20300000
+2026-11,ID01,Jabodetabek,Tangerang,Sukro,,108,19800000
+2026-12,ID01,Jabodetabek,Tangerang,Sukro,,109,20000000
+2026-09,ID01,Jabodetabek,Tangerang,Tic Tac,,84,14000000
+2026-10,ID01,Jabodetabek,Tangerang,Tic Tac,,81,13400000
+2026-11,ID01,Jabodetabek,Tangerang,Tic Tac,,85,14200000
+2026-12,ID01,Jabodetabek,Tangerang,Tic Tac,,85,14100000
+2026-09,ID01,Jabodetabek,Tangerang,Tos Tos,,95,21800000
+2026-10,ID01,Jabodetabek,Tangerang,Tos Tos,,100,23000000
+2026-11,ID01,Jabodetabek,Tangerang,Tos Tos,,100,22900000
+2026-12,ID01,Jabodetabek,Tangerang,Tos Tos,,100,23000000
+2026-09,ID01,Jabodetabek,Tangerang,Usagi,,10,1400000
+2026-10,ID01,Jabodetabek,Tangerang,Usagi,,11,1500000
+2026-11,ID01,Jabodetabek,Tangerang,Usagi,,11,1500000
+2026-12,ID01,Jabodetabek,Tangerang,Usagi,,11,1500000
+2026-09,ID01,Jawa Barat,Bandung,Deka,,19,4000000
+2026-10,ID01,Jawa Barat,Bandung,Deka,,21,4500000
+2026-11,ID01,Jawa Barat,Bandung,Deka,,22,4600000
+2026-12,ID01,Jawa Barat,Bandung,Deka,,21,4400000
+2026-09,ID01,Jawa Barat,Bandung,Kacang Dua Kelinci,,223,47700000
+2026-10,ID01,Jawa Barat,Bandung,Kacang Dua Kelinci,,216,46100000
+2026-11,ID01,Jawa Barat,Bandung,Kacang Dua Kelinci,,218,46700000
+2026-12,ID01,Jawa Barat,Bandung,Kacang Dua Kelinci,,231,49300000
+2026-09,ID01,Jawa Barat,Bandung,Pilus,,19,3300000
+2026-10,ID01,Jawa Barat,Bandung,Pilus,,21,3600000
+2026-11,ID01,Jawa Barat,Bandung,Pilus,,20,3400000
+2026-12,ID01,Jawa Barat,Bandung,Pilus,,20,3500000
+2026-09,ID01,Jawa Barat,Bandung,Roni,,12,1500000
+2026-10,ID01,Jawa Barat,Bandung,Roni,,13,1600000
+2026-11,ID01,Jawa Barat,Bandung,Roni,,13,1600000
+2026-12,ID01,Jawa Barat,Bandung,Roni,,14,1700000
+2026-09,ID01,Jawa Barat,Bandung,Sukro,,101,18300000
+2026-10,ID01,Jawa Barat,Bandung,Sukro,,102,18500000
+2026-11,ID01,Jawa Barat,Bandung,Sukro,,105,19000000
+2026-12,ID01,Jawa Barat,Bandung,Sukro,,102,18600000
+2026-09,ID01,Jawa Barat,Bandung,Tic Tac,,73,11900000
+2026-10,ID01,Jawa Barat,Bandung,Tic Tac,,77,12700000
+2026-11,ID01,Jawa Barat,Bandung,Tic Tac,,76,12500000
+2026-12,ID01,Jawa Barat,Bandung,Tic Tac,,73,12000000
+2026-09,ID01,Jawa Barat,Bandung,Tos Tos,,102,23200000
+2026-10,ID01,Jawa Barat,Bandung,Tos Tos,,111,25000000
+2026-11,ID01,Jawa Barat,Bandung,Tos Tos,,103,23300000
+2026-12,ID01,Jawa Barat,Bandung,Tos Tos,,107,24300000
+2026-09,ID01,Jawa Barat,Bandung,Usagi,,16,2200000
+2026-10,ID01,Jawa Barat,Bandung,Usagi,,16,2200000
+2026-11,ID01,Jawa Barat,Bandung,Usagi,,16,2300000
+2026-12,ID01,Jawa Barat,Bandung,Usagi,,17,2400000
+2026-09,ID01,Jawa Barat,Cirebon,Deka,,11,2300000
+2026-10,ID01,Jawa Barat,Cirebon,Deka,,11,2300000
+2026-11,ID01,Jawa Barat,Cirebon,Deka,,12,2600000
+2026-12,ID01,Jawa Barat,Cirebon,Deka,,11,2400000
+2026-09,ID01,Jawa Barat,Cirebon,Kacang Dua Kelinci,,78,18700000
+2026-10,ID01,Jawa Barat,Cirebon,Kacang Dua Kelinci,,81,19500000
+2026-11,ID01,Jawa Barat,Cirebon,Kacang Dua Kelinci,,83,19800000
+2026-12,ID01,Jawa Barat,Cirebon,Kacang Dua Kelinci,,88,21100000
+2026-09,ID01,Jawa Barat,Cirebon,Pilus,,8,1300000
+2026-10,ID01,Jawa Barat,Cirebon,Pilus,,7,1300000
+2026-11,ID01,Jawa Barat,Cirebon,Pilus,,8,1300000
+2026-12,ID01,Jawa Barat,Cirebon,Pilus,,8,1400000
+2026-09,ID01,Jawa Barat,Cirebon,Roni,,10,1200000
+2026-10,ID01,Jawa Barat,Cirebon,Roni,,10,1100000
+2026-11,ID01,Jawa Barat,Cirebon,Roni,,10,1200000
+2026-12,ID01,Jawa Barat,Cirebon,Roni,,11,1200000
+2026-09,ID01,Jawa Barat,Cirebon,Sukro,,48,8800000
+2026-10,ID01,Jawa Barat,Cirebon,Sukro,,50,9200000
+2026-11,ID01,Jawa Barat,Cirebon,Sukro,,52,9400000
+2026-12,ID01,Jawa Barat,Cirebon,Sukro,,53,9600000
+2026-09,ID01,Jawa Barat,Cirebon,Tic Tac,,19,3200000
+2026-10,ID01,Jawa Barat,Cirebon,Tic Tac,,20,3300000
+2026-11,ID01,Jawa Barat,Cirebon,Tic Tac,,20,3300000
+2026-12,ID01,Jawa Barat,Cirebon,Tic Tac,,20,3300000
+2026-09,ID01,Jawa Barat,Cirebon,Tos Tos,,31,7300000
+2026-10,ID01,Jawa Barat,Cirebon,Tos Tos,,34,8000000
+2026-11,ID01,Jawa Barat,Cirebon,Tos Tos,,35,8200000
+2026-12,ID01,Jawa Barat,Cirebon,Tos Tos,,35,8200000
+2026-09,ID01,Jawa Barat,Cirebon,Usagi,,18,2400000
+2026-10,ID01,Jawa Barat,Cirebon,Usagi,,19,2700000
+2026-11,ID01,Jawa Barat,Cirebon,Usagi,,18,2600000
+2026-12,ID01,Jawa Barat,Cirebon,Usagi,,19,2600000
+2026-09,ID01,Jawa Tengah,Semarang,Deka,,5,1100000
+2026-10,ID01,Jawa Tengah,Semarang,Deka,,5,1100000
+2026-11,ID01,Jawa Tengah,Semarang,Deka,,5,1100000
+2026-12,ID01,Jawa Tengah,Semarang,Deka,,5,1100000
+2026-09,ID01,Jawa Tengah,Semarang,Kacang Dua Kelinci,,48,10200000
+2026-10,ID01,Jawa Tengah,Semarang,Kacang Dua Kelinci,,48,10200000
+2026-11,ID01,Jawa Tengah,Semarang,Kacang Dua Kelinci,,51,10900000
+2026-12,ID01,Jawa Tengah,Semarang,Kacang Dua Kelinci,,50,10700000
+2026-09,ID01,Jawa Tengah,Semarang,Pilus,,14,2500000
+2026-10,ID01,Jawa Tengah,Semarang,Pilus,,16,2700000
+2026-11,ID01,Jawa Tengah,Semarang,Pilus,,15,2600000
+2026-12,ID01,Jawa Tengah,Semarang,Pilus,,16,2700000
+2026-09,ID01,Jawa Tengah,Semarang,Roni,,5,600000
+2026-10,ID01,Jawa Tengah,Semarang,Roni,,5,600000
+2026-11,ID01,Jawa Tengah,Semarang,Roni,,5,500000
+2026-12,ID01,Jawa Tengah,Semarang,Roni,,5,500000
+2026-09,ID01,Jawa Tengah,Semarang,Sukro,,27,4900000
+2026-10,ID01,Jawa Tengah,Semarang,Sukro,,28,5100000
+2026-11,ID01,Jawa Tengah,Semarang,Sukro,,31,5600000
+2026-12,ID01,Jawa Tengah,Semarang,Sukro,,31,5600000
+2026-09,ID01,Jawa Tengah,Semarang,Tic Tac,,15,2500000
+2026-10,ID01,Jawa Tengah,Semarang,Tic Tac,,16,2600000
+2026-11,ID01,Jawa Tengah,Semarang,Tic Tac,,16,2600000
+2026-12,ID01,Jawa Tengah,Semarang,Tic Tac,,15,2600000
+2026-09,ID01,Jawa Tengah,Semarang,Tos Tos,,19,4200000
+2026-10,ID01,Jawa Tengah,Semarang,Tos Tos,,20,4300000
+2026-11,ID01,Jawa Tengah,Semarang,Tos Tos,,20,4400000
+2026-12,ID01,Jawa Tengah,Semarang,Tos Tos,,19,4200000
+2026-09,ID01,Jawa Tengah,Semarang,Usagi,,6,900000
+2026-10,ID01,Jawa Tengah,Semarang,Usagi,,7,900000
+2026-11,ID01,Jawa Tengah,Semarang,Usagi,,7,1000000
+2026-12,ID01,Jawa Tengah,Semarang,Usagi,,7,1000000
+2026-09,ID01,Jawa Tengah,Solo,Deka,,31,6600000
+2026-10,ID01,Jawa Tengah,Solo,Deka,,32,6700000
+2026-11,ID01,Jawa Tengah,Solo,Deka,,31,6500000
+2026-12,ID01,Jawa Tengah,Solo,Deka,,32,6700000
+2026-09,ID01,Jawa Tengah,Solo,Kacang Dua Kelinci,,205,43600000
+2026-10,ID01,Jawa Tengah,Solo,Kacang Dua Kelinci,,214,45600000
+2026-11,ID01,Jawa Tengah,Solo,Kacang Dua Kelinci,,207,44000000
+2026-12,ID01,Jawa Tengah,Solo,Kacang Dua Kelinci,,225,47800000
+2026-09,ID01,Jawa Tengah,Solo,Pilus,,24,4000000
+2026-10,ID01,Jawa Tengah,Solo,Pilus,,23,3900000
+2026-11,ID01,Jawa Tengah,Solo,Pilus,,24,4000000
+2026-12,ID01,Jawa Tengah,Solo,Pilus,,24,4100000
+2026-09,ID01,Jawa Tengah,Solo,Roni,,5,600000
+2026-10,ID01,Jawa Tengah,Solo,Roni,,5,600000
+2026-11,ID01,Jawa Tengah,Solo,Roni,,5,500000
+2026-12,ID01,Jawa Tengah,Solo,Roni,,5,600000
+2026-09,ID01,Jawa Tengah,Solo,Sukro,,50,9100000
+2026-10,ID01,Jawa Tengah,Solo,Sukro,,51,9400000
+2026-11,ID01,Jawa Tengah,Solo,Sukro,,52,9500000
+2026-12,ID01,Jawa Tengah,Solo,Sukro,,54,9800000
+2026-09,ID01,Jawa Tengah,Solo,Tic Tac,,44,7200000
+2026-10,ID01,Jawa Tengah,Solo,Tic Tac,,43,7000000
+2026-11,ID01,Jawa Tengah,Solo,Tic Tac,,45,7400000
+2026-12,ID01,Jawa Tengah,Solo,Tic Tac,,46,7600000
+2026-09,ID01,Jawa Tengah,Solo,Tos Tos,,56,13300000
+2026-10,ID01,Jawa Tengah,Solo,Tos Tos,,60,14200000
+2026-11,ID01,Jawa Tengah,Solo,Tos Tos,,59,13900000
+2026-12,ID01,Jawa Tengah,Solo,Tos Tos,,62,14800000
+2026-09,ID01,Jawa Tengah,Solo,Usagi,,12,1700000
+2026-10,ID01,Jawa Tengah,Solo,Usagi,,13,1800000
+2026-11,ID01,Jawa Tengah,Solo,Usagi,,12,1700000
+2026-12,ID01,Jawa Tengah,Solo,Usagi,,13,1900000
+2026-09,ID01,Jawa Timur,Malang,Deka,,10,2100000
+2026-10,ID01,Jawa Timur,Malang,Deka,,10,2200000
+2026-11,ID01,Jawa Timur,Malang,Deka,,11,2300000
+2026-12,ID01,Jawa Timur,Malang,Deka,,10,2200000
+2026-09,ID01,Jawa Timur,Malang,Kacang Dua Kelinci,,151,32500000
+2026-10,ID01,Jawa Timur,Malang,Kacang Dua Kelinci,,158,34000000
+2026-11,ID01,Jawa Timur,Malang,Kacang Dua Kelinci,,158,34000000
+2026-12,ID01,Jawa Timur,Malang,Kacang Dua Kelinci,,155,33300000
+2026-09,ID01,Jawa Timur,Malang,Pilus,,13,2100000
+2026-10,ID01,Jawa Timur,Malang,Pilus,,12,2000000
+2026-11,ID01,Jawa Timur,Malang,Pilus,,12,2000000
+2026-12,ID01,Jawa Timur,Malang,Pilus,,12,2100000
+2026-09,ID01,Jawa Timur,Malang,Roni,,23,2700000
+2026-10,ID01,Jawa Timur,Malang,Roni,,23,2800000
+2026-11,ID01,Jawa Timur,Malang,Roni,,24,2800000
+2026-12,ID01,Jawa Timur,Malang,Roni,,25,2900000
+2026-09,ID01,Jawa Timur,Malang,Sukro,,78,14100000
+2026-10,ID01,Jawa Timur,Malang,Sukro,,76,13800000
+2026-11,ID01,Jawa Timur,Malang,Sukro,,77,13900000
+2026-12,ID01,Jawa Timur,Malang,Sukro,,79,14300000
+2026-09,ID01,Jawa Timur,Malang,Tic Tac,,57,9300000
+2026-10,ID01,Jawa Timur,Malang,Tic Tac,,58,9400000
+2026-11,ID01,Jawa Timur,Malang,Tic Tac,,61,9900000
+2026-12,ID01,Jawa Timur,Malang,Tic Tac,,58,9500000
+2026-09,ID01,Jawa Timur,Malang,Tos Tos,,39,8700000
+2026-10,ID01,Jawa Timur,Malang,Tos Tos,,38,8400000
+2026-11,ID01,Jawa Timur,Malang,Tos Tos,,38,8400000
+2026-12,ID01,Jawa Timur,Malang,Tos Tos,,42,9300000
+2026-09,ID01,Jawa Timur,Malang,Usagi,,17,2300000
+2026-10,ID01,Jawa Timur,Malang,Usagi,,17,2400000
+2026-11,ID01,Jawa Timur,Malang,Usagi,,17,2400000
+2026-12,ID01,Jawa Timur,Malang,Usagi,,18,2600000
+2026-09,ID01,Jawa Timur,Surabaya,Deka,,9,1800000
+2026-10,ID01,Jawa Timur,Surabaya,Deka,,9,1900000
+2026-11,ID01,Jawa Timur,Surabaya,Deka,,10,2100000
+2026-12,ID01,Jawa Timur,Surabaya,Deka,,9,2000000
+2026-09,ID01,Jawa Timur,Surabaya,Kacang Dua Kelinci,,70,14600000
+2026-10,ID01,Jawa Timur,Surabaya,Kacang Dua Kelinci,,71,14800000
+2026-11,ID01,Jawa Timur,Surabaya,Kacang Dua Kelinci,,73,15100000
+2026-12,ID01,Jawa Timur,Surabaya,Kacang Dua Kelinci,,68,14200000
+2026-09,ID01,Jawa Timur,Surabaya,Pilus,,11,1900000
+2026-10,ID01,Jawa Timur,Surabaya,Pilus,,11,2000000
+2026-11,ID01,Jawa Timur,Surabaya,Pilus,,11,1900000
+2026-12,ID01,Jawa Timur,Surabaya,Pilus,,12,2100000
+2026-09,ID01,Jawa Timur,Surabaya,Roni,,7,800000
+2026-10,ID01,Jawa Timur,Surabaya,Roni,,7,800000
+2026-11,ID01,Jawa Timur,Surabaya,Roni,,7,800000
+2026-12,ID01,Jawa Timur,Surabaya,Roni,,7,900000
+2026-09,ID01,Jawa Timur,Surabaya,Sukro,,23,4300000
+2026-10,ID01,Jawa Timur,Surabaya,Sukro,,25,4600000
+2026-11,ID01,Jawa Timur,Surabaya,Sukro,,25,4600000
+2026-12,ID01,Jawa Timur,Surabaya,Sukro,,24,4400000
+2026-09,ID01,Jawa Timur,Surabaya,Tic Tac,,26,4300000
+2026-10,ID01,Jawa Timur,Surabaya,Tic Tac,,28,4600000
+2026-11,ID01,Jawa Timur,Surabaya,Tic Tac,,27,4400000
+2026-12,ID01,Jawa Timur,Surabaya,Tic Tac,,29,4800000
+2026-09,ID01,Jawa Timur,Surabaya,Tos Tos,,27,6200000
+2026-10,ID01,Jawa Timur,Surabaya,Tos Tos,,27,6200000
+2026-11,ID01,Jawa Timur,Surabaya,Tos Tos,,27,6300000
+2026-12,ID01,Jawa Timur,Surabaya,Tos Tos,,28,6400000
+2026-09,ID01,Jawa Timur,Surabaya,Usagi,,4,500000
+2026-10,ID01,Jawa Timur,Surabaya,Usagi,,4,500000
+2026-11,ID01,Jawa Timur,Surabaya,Usagi,,4,500000
+2026-12,ID01,Jawa Timur,Surabaya,Usagi,,4,500000
+2026-09,ID01,Kalimantan,Balikpapan,Deka,,20,4100000
+2026-10,ID01,Kalimantan,Balikpapan,Deka,,19,4000000
+2026-11,ID01,Kalimantan,Balikpapan,Deka,,19,4100000
+2026-12,ID01,Kalimantan,Balikpapan,Deka,,21,4500000
+2026-09,ID01,Kalimantan,Balikpapan,Kacang Dua Kelinci,,101,23800000
+2026-10,ID01,Kalimantan,Balikpapan,Kacang Dua Kelinci,,111,25900000
+2026-11,ID01,Kalimantan,Balikpapan,Kacang Dua Kelinci,,106,24900000
+2026-12,ID01,Kalimantan,Balikpapan,Kacang Dua Kelinci,,104,24500000
+2026-09,ID01,Kalimantan,Balikpapan,Pilus,,6,1000000
+2026-10,ID01,Kalimantan,Balikpapan,Pilus,,6,1000000
+2026-11,ID01,Kalimantan,Balikpapan,Pilus,,6,1000000
+2026-12,ID01,Kalimantan,Balikpapan,Pilus,,6,1100000
+2026-09,ID01,Kalimantan,Balikpapan,Roni,,3,300000
+2026-10,ID01,Kalimantan,Balikpapan,Roni,,2,300000
+2026-11,ID01,Kalimantan,Balikpapan,Roni,,3,300000
+2026-12,ID01,Kalimantan,Balikpapan,Roni,,3,300000
+2026-09,ID01,Kalimantan,Balikpapan,Sukro,,82,15000000
+2026-10,ID01,Kalimantan,Balikpapan,Sukro,,80,14600000
+2026-11,ID01,Kalimantan,Balikpapan,Sukro,,85,15500000
+2026-12,ID01,Kalimantan,Balikpapan,Sukro,,87,15900000
+2026-09,ID01,Kalimantan,Balikpapan,Tic Tac,,37,6100000
+2026-10,ID01,Kalimantan,Balikpapan,Tic Tac,,36,5900000
+2026-11,ID01,Kalimantan,Balikpapan,Tic Tac,,38,6200000
+2026-12,ID01,Kalimantan,Balikpapan,Tic Tac,,38,6200000
+2026-09,ID01,Kalimantan,Balikpapan,Tos Tos,,23,4600000
+2026-10,ID01,Kalimantan,Balikpapan,Tos Tos,,23,4600000
+2026-11,ID01,Kalimantan,Balikpapan,Tos Tos,,25,5000000
+2026-12,ID01,Kalimantan,Balikpapan,Tos Tos,,25,5000000
+2026-09,ID01,Kalimantan,Balikpapan,Usagi,,12,1700000
+2026-10,ID01,Kalimantan,Balikpapan,Usagi,,13,1800000
+2026-11,ID01,Kalimantan,Balikpapan,Usagi,,12,1800000
+2026-12,ID01,Kalimantan,Balikpapan,Usagi,,13,1800000
+2026-09,ID01,Kalimantan,Banjarmasin,Deka,,5,1000000
+2026-10,ID01,Kalimantan,Banjarmasin,Deka,,5,1000000
+2026-11,ID01,Kalimantan,Banjarmasin,Deka,,5,1000000
+2026-12,ID01,Kalimantan,Banjarmasin,Deka,,5,1000000
+2026-09,ID01,Kalimantan,Banjarmasin,Kacang Dua Kelinci,,26,5600000
+2026-10,ID01,Kalimantan,Banjarmasin,Kacang Dua Kelinci,,28,5800000
+2026-11,ID01,Kalimantan,Banjarmasin,Kacang Dua Kelinci,,28,5900000
+2026-12,ID01,Kalimantan,Banjarmasin,Kacang Dua Kelinci,,27,5800000
+2026-09,ID01,Kalimantan,Banjarmasin,Pilus,,5,900000
+2026-10,ID01,Kalimantan,Banjarmasin,Pilus,,5,900000
+2026-11,ID01,Kalimantan,Banjarmasin,Pilus,,5,900000
+2026-12,ID01,Kalimantan,Banjarmasin,Pilus,,6,1000000
+2026-09,ID01,Kalimantan,Banjarmasin,Roni,,2,200000
+2026-10,ID01,Kalimantan,Banjarmasin,Roni,,2,200000
+2026-11,ID01,Kalimantan,Banjarmasin,Roni,,2,200000
+2026-12,ID01,Kalimantan,Banjarmasin,Roni,,2,200000
+2026-09,ID01,Kalimantan,Banjarmasin,Sukro,,19,3500000
+2026-10,ID01,Kalimantan,Banjarmasin,Sukro,,19,3400000
+2026-11,ID01,Kalimantan,Banjarmasin,Sukro,,20,3700000
+2026-12,ID01,Kalimantan,Banjarmasin,Sukro,,20,3700000
+2026-09,ID01,Kalimantan,Banjarmasin,Tic Tac,,7,1100000
+2026-10,ID01,Kalimantan,Banjarmasin,Tic Tac,,8,1200000
+2026-11,ID01,Kalimantan,Banjarmasin,Tic Tac,,7,1200000
+2026-12,ID01,Kalimantan,Banjarmasin,Tic Tac,,7,1200000
+2026-09,ID01,Kalimantan,Banjarmasin,Tos Tos,,17,3700000
+2026-10,ID01,Kalimantan,Banjarmasin,Tos Tos,,18,3800000
+2026-11,ID01,Kalimantan,Banjarmasin,Tos Tos,,18,3800000
+2026-12,ID01,Kalimantan,Banjarmasin,Tos Tos,,17,3700000
+2026-09,ID01,Kalimantan,Banjarmasin,Usagi,,1,200000
+2026-10,ID01,Kalimantan,Banjarmasin,Usagi,,2,200000
+2026-11,ID01,Kalimantan,Banjarmasin,Usagi,,2,200000
+2026-12,ID01,Kalimantan,Banjarmasin,Usagi,,2,200000
+2026-09,ID01,Sumatera,Medan,Deka,,26,5500000
+2026-10,ID01,Sumatera,Medan,Deka,,25,5300000
+2026-11,ID01,Sumatera,Medan,Deka,,25,5300000
+2026-12,ID01,Sumatera,Medan,Deka,,27,5800000
+2026-09,ID01,Sumatera,Medan,Kacang Dua Kelinci,,198,44600000
+2026-10,ID01,Sumatera,Medan,Kacang Dua Kelinci,,197,44400000
+2026-11,ID01,Sumatera,Medan,Kacang Dua Kelinci,,201,45300000
+2026-12,ID01,Sumatera,Medan,Kacang Dua Kelinci,,209,47100000
+2026-09,ID01,Sumatera,Medan,Pilus,,26,4500000
+2026-10,ID01,Sumatera,Medan,Pilus,,26,4500000
+2026-11,ID01,Sumatera,Medan,Pilus,,26,4400000
+2026-12,ID01,Sumatera,Medan,Pilus,,26,4500000
+2026-09,ID01,Sumatera,Medan,Roni,,7,900000
+2026-10,ID01,Sumatera,Medan,Roni,,7,900000
+2026-11,ID01,Sumatera,Medan,Roni,,8,900000
+2026-12,ID01,Sumatera,Medan,Roni,,8,900000
+2026-09,ID01,Sumatera,Medan,Sukro,,81,15000000
+2026-10,ID01,Sumatera,Medan,Sukro,,85,15600000
+2026-11,ID01,Sumatera,Medan,Sukro,,85,15600000
+2026-12,ID01,Sumatera,Medan,Sukro,,88,16200000
+2026-09,ID01,Sumatera,Medan,Tic Tac,,53,8800000
+2026-10,ID01,Sumatera,Medan,Tic Tac,,54,8900000
+2026-11,ID01,Sumatera,Medan,Tic Tac,,59,9700000
+2026-12,ID01,Sumatera,Medan,Tic Tac,,56,9300000
+2026-09,ID01,Sumatera,Medan,Tos Tos,,71,15500000
+2026-10,ID01,Sumatera,Medan,Tos Tos,,78,16900000
+2026-11,ID01,Sumatera,Medan,Tos Tos,,79,17100000
+2026-12,ID01,Sumatera,Medan,Tos Tos,,80,17400000
+2026-09,ID01,Sumatera,Medan,Usagi,,30,4300000
+2026-10,ID01,Sumatera,Medan,Usagi,,32,4500000
+2026-11,ID01,Sumatera,Medan,Usagi,,31,4400000
+2026-12,ID01,Sumatera,Medan,Usagi,,34,4800000
+2026-09,ID01,Sumatera,Palembang,Deka,,19,4000000
+2026-10,ID01,Sumatera,Palembang,Deka,,20,4200000
+2026-11,ID01,Sumatera,Palembang,Deka,,19,4100000
+2026-12,ID01,Sumatera,Palembang,Deka,,19,4100000
+2026-09,ID01,Sumatera,Palembang,Kacang Dua Kelinci,,110,24500000
+2026-10,ID01,Sumatera,Palembang,Kacang Dua Kelinci,,106,23600000
+2026-11,ID01,Sumatera,Palembang,Kacang Dua Kelinci,,113,25200000
+2026-12,ID01,Sumatera,Palembang,Kacang Dua Kelinci,,118,26300000
+2026-09,ID01,Sumatera,Palembang,Pilus,,28,4700000
+2026-10,ID01,Sumatera,Palembang,Pilus,,29,4900000
+2026-11,ID01,Sumatera,Palembang,Pilus,,30,5100000
+2026-12,ID01,Sumatera,Palembang,Pilus,,30,5100000
+2026-09,ID01,Sumatera,Palembang,Roni,,8,1000000
+2026-10,ID01,Sumatera,Palembang,Roni,,8,1000000
+2026-11,ID01,Sumatera,Palembang,Roni,,8,1000000
+2026-12,ID01,Sumatera,Palembang,Roni,,9,1000000
+2026-09,ID01,Sumatera,Palembang,Sukro,,48,8700000
+2026-10,ID01,Sumatera,Palembang,Sukro,,49,9000000
+2026-11,ID01,Sumatera,Palembang,Sukro,,50,9200000
+2026-12,ID01,Sumatera,Palembang,Sukro,,51,9300000
+2026-09,ID01,Sumatera,Palembang,Tic Tac,,63,10200000
+2026-10,ID01,Sumatera,Palembang,Tic Tac,,60,9800000
+2026-11,ID01,Sumatera,Palembang,Tic Tac,,66,10700000
+2026-12,ID01,Sumatera,Palembang,Tic Tac,,68,11100000
+2026-09,ID01,Sumatera,Palembang,Tos Tos,,91,19900000
+2026-10,ID01,Sumatera,Palembang,Tos Tos,,87,19000000
+2026-11,ID01,Sumatera,Palembang,Tos Tos,,93,20500000
+2026-12,ID01,Sumatera,Palembang,Tos Tos,,97,21400000
+2026-09,ID01,Sumatera,Palembang,Usagi,,15,2100000
+2026-10,ID01,Sumatera,Palembang,Usagi,,15,2100000
+2026-11,ID01,Sumatera,Palembang,Usagi,,15,2100000
+2026-12,ID01,Sumatera,Palembang,Usagi,,16,2300000

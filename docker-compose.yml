@@ -1,0 +1,72 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: duakelinci-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: duakelinci_dwh
+      POSTGRES_USER: duakelinci_user
+      POSTGRES_PASSWORD: ***REMOVED***
+      TZ: Asia/Jakarta
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init-duakelinci.sql:/docker-entrypoint-initdb.d/init-duakelinci.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U duakelinci_user -d duakelinci_dwh"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - duakelinci-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: duakelinci-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/data
+    environment:
+      - TZ=Asia/Jakarta
+      - ENVIRONMENT=production
+      - DB_TYPE=postgresql
+      - DATABASE_URL=postgresql://duakelinci_user:***REMOVED***@postgres:5432/duakelinci_dwh
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=duakelinci_dwh
+      - POSTGRES_USER=duakelinci_user
+      - POSTGRES_PASSWORD=***REMOVED***
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - duakelinci-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: duakelinci-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+      - BACKEND_API_INTERNAL_URL=http://backend:8000/api/:path*
+    depends_on:
+      - backend
+    networks:
+      - duakelinci-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  duakelinci-network:
+    driver: bridge
