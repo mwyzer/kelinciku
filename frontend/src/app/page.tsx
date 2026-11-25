@@ -253,6 +253,147 @@ export default function HomePage() {
     }
   };
 
+  // --- ACTIONS: MASTER DATA & CSV ---
+  const handleExportCsv = (type: string) => {
+    let dataToExport: any[] = [];
+    let filename = `master_${type}_${new Date().toISOString().slice(0, 10)}.csv`;
+
+    if (type === "employees") dataToExport = employees;
+    else if (type === "outlets") dataToExport = outlets;
+    else if (type === "products") dataToExport = products;
+    else if (type === "warehouses") dataToExport = warehouses;
+
+    if (!dataToExport || dataToExport.length === 0) {
+      alert("Tidak ada data untuk diekspor.");
+      return;
+    }
+
+    const headers = Object.keys(dataToExport[0]).join(",");
+    const rows = dataToExport.map(item =>
+      Object.values(item).map(val => `"${String(val ?? '').replace(/"/g, '""')}"`).join(",")
+    ).join("\n");
+
+    const blob = new Blob([`${headers}\n${rows}`], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleImportCsv = async (entityType: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const csvContent = e.target?.result as string;
+      if (!csvContent) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/master/import-csv`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ entity_type: entityType, csv_content: csvContent })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`Sukses! ${data.message}`);
+          loadMasterData();
+        } else {
+          alert(`Gagal impor: ${data.detail || "Terjadi kesalahan"}`);
+        }
+      } catch (err) {
+        alert(`Gagal mengunggah file CSV: ${err}`);
+      }
+    };
+    reader.readAsText(file);
+    // Reset file input
+    event.target.value = "";
+  };
+
+  const handleImportSalesCsv = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const csvContent = e.target?.result as string;
+      if (!csvContent) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/dashboard/import-sales-csv`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ csv_content: csvContent })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`Sukses! ${data.message}`);
+          loadDashboardAnalytics();
+        } else {
+          alert(`Gagal impor: ${data.detail || "Terjadi kesalahan"}`);
+        }
+      } catch (err) {
+        alert(`Gagal mengunggah sales CSV: ${err}`);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = "";
+  };
+
+  const handleDeleteMasterItem = async (type: string, id: string) => {
+    if (!confirm(`Apakah Anda yakin ingin menghapus data ${type} ID: ${id}?`)) return;
+    try {
+      const endpoint = type === "employees" ? `employees/${id}` :
+                       type === "outlets" ? `outlets/${id}` :
+                       type === "products" ? `products/${id}` : `warehouses/${id}`;
+      const res = await fetch(`${API_BASE}/master/${endpoint}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        alert(`Data ${id} berhasil dihapus.`);
+        loadMasterData();
+      }
+    } catch (e) {
+      alert("Gagal menghapus data: " + e);
+    }
+  };
+
+  const handleSaveMasterItem = async () => {
+    if (!editingItem) return;
+    try {
+      const { mode, type, data } = editingItem;
+      const isAdd = mode === "add";
+      let url = `${API_BASE}/master/${type}`;
+      let method = isAdd ? "POST" : "PUT";
+
+      if (!isAdd) {
+        const id = type === "employees" ? data.employee_id :
+                   type === "outlets" ? data.outlet_id :
+                   type === "products" ? data.sku_id : data.warehouse_id;
+        url = `${API_BASE}/master/${type}/${id}`;
+      }
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      if (result.success) {
+        alert(`Data master ${type} berhasil disimpan!`);
+        setEditingItem(null);
+        loadMasterData();
+      } else {
+        alert(`Gagal: ${result.detail || "Terjadi kesalahan"}`);
+      }
+    } catch (e) {
+      alert("Gagal menyimpan data master: " + e);
+    }
+  };
+
   // --- ACTIONS: SALES ROUTE ---
   const handleSalesCheckIn = async (stop: any) => {
     try {
@@ -502,6 +643,14 @@ export default function HomePage() {
               <span className="px-3.5 text-[10px] uppercase font-bold tracking-wider text-slate-400">Shortcut Cepat</span>
             </div>
 
+            <a
+              href={process.env.NEXT_PUBLIC_STAFF_URL || "http://localhost:3001"}
+              className="flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-bold bg-[#56CA00]/10 text-[#3F9700] hover:bg-[#56CA00]/20 transition"
+            >
+              <i className="fa-solid fa-mobile-screen-button text-sm w-4"></i>
+              <span>Portal Staf (Port 3001)</span>
+            </a>
+
             <Link
               href="/sales-brief"
               className="flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-[#16B1FF] hover:bg-sky-50 transition"
@@ -556,6 +705,13 @@ export default function HomePage() {
           </div>
 
           <div className="flex items-center space-x-3">
+            <a
+              href={process.env.NEXT_PUBLIC_STAFF_URL || "http://localhost:3001"}
+              className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold bg-[#3A3541] text-white hover:bg-[#524B5C] transition shadow-sm"
+            >
+              <i className="fa-solid fa-users-gear mr-1.5"></i>
+              Portal Staf
+            </a>
             <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${isWarehousePersona ? 'bg-[#8C57FF]/10 text-[#8C57FF]' : 'bg-[#16B1FF]/10 text-[#16B1FF]'}`}>
               <i className={`fa-solid ${isWarehousePersona ? 'fa-box' : 'fa-briefcase'} mr-1.5`}></i>
               {isWarehousePersona ? 'Role: Pergudangan' : 'Role: Penjualan'}
@@ -587,6 +743,11 @@ export default function HomePage() {
                 <div className="flex items-center space-x-2">
                   <button onClick={() => { setStartDate("2026-09-01"); setEndDate("2026-10-31"); setPresetDate("all"); }} className={`px-3 py-1.5 rounded-md text-xs font-bold ${presetDate === "all" ? "bg-[#8C57FF] text-white" : "bg-slate-100 text-slate-700"}`}>Semua</button>
                   <button onClick={() => { setStartDate("2026-10-01"); setEndDate("2026-10-31"); setPresetDate("oct"); }} className={`px-3 py-1.5 rounded-md text-xs font-bold ${presetDate === "oct" ? "bg-[#8C57FF] text-white" : "bg-slate-100 text-slate-700"}`}>Okt 2026</button>
+                  <label className="cursor-pointer bg-[#56CA00] hover:bg-[#4CB200] text-white text-xs font-bold px-3 py-1.5 rounded-md flex items-center space-x-1.5 shadow transition">
+                    <i className="fa-solid fa-file-arrow-up"></i>
+                    <span>Impor CSV Sales</span>
+                    <input type="file" accept=".csv" onChange={handleImportSalesCsv} className="hidden" />
+                  </label>
                 </div>
               </div>
 
@@ -1293,19 +1454,456 @@ export default function HomePage() {
 
           {/* TAB 5: MASTER DATA */}
           {activeTab === "master" && (
-            <div className="bg-white p-6 rounded-2xl border border-[rgba(58,53,65,0.08)] shadow-[0_4px_18px_rgba(58,53,65,0.08)] space-y-4">
-              <div className="flex justify-between items-center pb-3 border-b border-slate-200">
-                <h2 className="text-base font-bold text-slate-900">
-                  Master Data: {masterSubTab.toUpperCase()} ({
-                    masterSubTab === "employees" ? employees.length :
-                    masterSubTab === "outlets" ? outlets.length :
-                    masterSubTab === "products" ? products.length : warehouses.length
-                  })
-                </h2>
+            <div className="bg-white p-6 rounded-2xl border border-[rgba(58,53,65,0.08)] shadow-[0_4px_18px_rgba(58,53,65,0.08)] space-y-5">
+              
+              {/* Header Action Toolbar */}
+              <div className="flex flex-wrap items-center justify-between pb-4 border-b border-slate-200 gap-3">
+                <div>
+                  <h2 className="text-base font-bold text-slate-900 flex items-center">
+                    <i className="fa-solid fa-database text-[#8C57FF] mr-2"></i>
+                    Master Data: {
+                      masterSubTab === "employees" ? "Karyawan & Personil" :
+                      masterSubTab === "outlets" ? "Outlet & Toko Mitra" :
+                      masterSubTab === "products" ? "SKU Produk & Harga" : "Gudang & Depo Cabang"
+                    }
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Data Master terintegrasi dengan WMS, Rute Sales, dan Fact Tables. Total: {
+                      masterSubTab === "employees" ? employees.length :
+                      masterSubTab === "outlets" ? outlets.length :
+                      masterSubTab === "products" ? products.length : warehouses.length
+                    } entri terdaftar.
+                  </p>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  {/* TOMBOL IMPOR CSV */}
+                  <label className="cursor-pointer bg-[#56CA00] hover:bg-[#4CB200] text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center space-x-1.5 shadow transition">
+                    <i className="fa-solid fa-file-csv"></i>
+                    <span>Impor CSV {masterSubTab.toUpperCase()}</span>
+                    <input
+                      type="file"
+                      accept=".csv"
+                      onChange={(e) => handleImportCsv(masterSubTab, e)}
+                      className="hidden"
+                    />
+                  </label>
+
+                  {/* TOMBOL EKSPOR CSV */}
+                  <button
+                    onClick={() => handleExportCsv(masterSubTab)}
+                    className="bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold px-3 py-2 rounded-lg flex items-center space-x-1.5 shadow-sm transition"
+                  >
+                    <i className="fa-solid fa-download text-slate-500"></i>
+                    <span>Ekspor CSV</span>
+                  </button>
+
+                  {/* TOMBOL TAMBAH DATA */}
+                  <button
+                    onClick={() => {
+                      const defaultData: any =
+                        masterSubTab === "employees" ? { employee_id: `EMP-NEW-${Date.now().toString().slice(-4)}`, full_name: "", email: "", phone: "", department: "SALES", job_title: "", role_type: "STAFF", region: "Jawa Barat", branch: "Bandung", warehouse_id: "WH-BDG", status: "ACTIVE" } :
+                        masterSubTab === "outlets" ? { outlet_id: `OUT-NEW-${Date.now().toString().slice(-4)}`, outlet_name: "", outlet_type: "Toko Kelontong", region: "Jawa Barat", branch: "Bandung", credit_limit_idr: 50000000, payment_term_days: 14, status: "ACTIVE" } :
+                        masterSubTab === "products" ? { sku_id: `SKU-NEW-${Date.now().toString().slice(-4)}`, sku_name: "", brand: "Kacang Dua Kelinci", category: "Snack", carton_pack_qty: 24, price_het_idr: 120000, price_wholesale_idr: 105000, shelf_life_days: 365, status: "ACTIVE" } :
+                        { warehouse_id: `WH-NEW-${Date.now().toString().slice(-4)}`, warehouse_name: "", region: "Jawa Barat", branch: "Bandung", capacity_carton: 15000, status: "ACTIVE" };
+                      setEditingItem({ mode: "add", type: masterSubTab, data: defaultData });
+                    }}
+                    className="bg-[#8C57FF] hover:bg-[#7E4EE6] text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center space-x-1.5 shadow transition"
+                  >
+                    <i className="fa-solid fa-plus"></i>
+                    <span>Tambah Data</span>
+                  </button>
+                </div>
               </div>
-              <div className="text-xs text-slate-500">
-                Data master {masterSubTab} telah terhubung langsung dengan modul WMS, Rute Sales, dan ERP QAD.
-              </div>
+
+              {/* TABEL MASTER: EMPLOYEES */}
+              {masterSubTab === "employees" && (
+                <div className="space-y-3">
+                  {/* Filter Toolbar */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <div className="flex items-center space-x-2 flex-1 max-w-sm">
+                      <i className="fa-solid fa-magnifying-glass text-slate-400 text-xs"></i>
+                      <input
+                        type="text"
+                        placeholder="Cari NIP, nama, email..."
+                        value={empSearch}
+                        onChange={(e) => setEmpSearch(e.target.value)}
+                        className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs outline-none focus:border-[#8C57FF]"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2 text-xs">
+                      <span className="text-slate-500 font-semibold">Departemen:</span>
+                      <select
+                        value={empDeptFilter}
+                        onChange={(e) => setEmpDeptFilter(e.target.value)}
+                        className="bg-white border border-slate-300 rounded-lg px-2 py-1.5 text-xs outline-none"
+                      >
+                        <option value="ALL">Semua Departemen</option>
+                        <option value="SALES">SALES</option>
+                        <option value="WAREHOUSE">WAREHOUSE</option>
+                      </select>
+                      <select
+                        value={empRoleFilter}
+                        onChange={(e) => setEmpRoleFilter(e.target.value)}
+                        className="bg-white border border-slate-300 rounded-lg px-2 py-1.5 text-xs outline-none"
+                      >
+                        <option value="ALL">Semua Level</option>
+                        <option value="MANAGER">MANAGER</option>
+                        <option value="SUPERVISOR">SUPERVISOR</option>
+                        <option value="STAFF">STAFF</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Table */}
+                  <div className="overflow-x-auto border border-slate-200 rounded-xl">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="py-2.5 px-3">NIP</th>
+                          <th className="py-2.5 px-3">Nama Lengkap</th>
+                          <th className="py-2.5 px-3">Kontak / Email</th>
+                          <th className="py-2.5 px-3">Dept / Level</th>
+                          <th className="py-2.5 px-3">Wilayah / Cabang</th>
+                          <th className="py-2.5 px-3">Depo Gudang</th>
+                          <th className="py-2.5 px-3 text-center">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 font-medium">
+                        {employees
+                          .filter(e => {
+                            const matchSearch = (e.full_name || "").toLowerCase().includes(empSearch.toLowerCase()) ||
+                                                (e.employee_id || "").toLowerCase().includes(empSearch.toLowerCase()) ||
+                                                (e.email || "").toLowerCase().includes(empSearch.toLowerCase());
+                            const matchDept = empDeptFilter === "ALL" || e.department === empDeptFilter;
+                            const matchRole = empRoleFilter === "ALL" || e.role_type === empRoleFilter;
+                            return matchSearch && matchDept && matchRole;
+                          })
+                          .map((emp) => (
+                            <tr key={emp.employee_id} className="hover:bg-slate-50/80 transition">
+                              <td className="py-2.5 px-3 font-mono font-bold text-slate-800">{emp.employee_id}</td>
+                              <td className="py-2.5 px-3 font-bold text-slate-900">{emp.full_name}</td>
+                              <td className="py-2.5 px-3 text-slate-600">
+                                <div>{emp.email}</div>
+                                <div className="text-[10px] text-slate-400">{emp.phone}</div>
+                              </td>
+                              <td className="py-2.5 px-3">
+                                <span className={`px-2 py-0.5 rounded font-bold text-[10px] ${emp.department === 'SALES' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                                  {emp.department}
+                                </span>
+                                <span className="ml-1 text-slate-500 font-semibold">{emp.job_title}</span>
+                              </td>
+                              <td className="py-2.5 px-3 text-slate-600">{emp.region} ({emp.branch})</td>
+                              <td className="py-2.5 px-3 font-mono text-slate-700">{emp.warehouse_id || "-"}</td>
+                              <td className="py-2.5 px-3 text-center space-x-1">
+                                <button
+                                  onClick={() => setEditingItem({ mode: "edit", type: "employees", data: { ...emp } })}
+                                  className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
+                                  title="Edit"
+                                >
+                                  <i className="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteMasterItem("employees", emp.employee_id)}
+                                  className="p-1.5 text-red-600 hover:bg-red-50 rounded"
+                                  title="Hapus"
+                                >
+                                  <i className="fa-solid fa-trash-can"></i>
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* TABEL MASTER: OUTLETS */}
+              {masterSubTab === "outlets" && (
+                <div className="space-y-3">
+                  {/* Filter Toolbar */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <div className="flex items-center space-x-2 flex-1 max-w-sm">
+                      <i className="fa-solid fa-magnifying-glass text-slate-400 text-xs"></i>
+                      <input
+                        type="text"
+                        placeholder="Cari ID, nama outlet, cabang..."
+                        value={outletSearch}
+                        onChange={(e) => setOutletSearch(e.target.value)}
+                        className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs outline-none focus:border-[#8C57FF]"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2 text-xs">
+                      <select
+                        value={outletRegionFilter}
+                        onChange={(e) => setOutletRegionFilter(e.target.value)}
+                        className="bg-white border border-slate-300 rounded-lg px-2 py-1.5 text-xs outline-none"
+                      >
+                        <option value="ALL">Semua Wilayah</option>
+                        <option value="Jawa Barat">Jawa Barat</option>
+                        <option value="Jawa Tengah">Jawa Tengah</option>
+                        <option value="Jawa Timur">Jawa Timur</option>
+                        <option value="DKI Jakarta">DKI Jakarta</option>
+                      </select>
+                      <select
+                        value={outletTypeFilter}
+                        onChange={(e) => setOutletTypeFilter(e.target.value)}
+                        className="bg-white border border-slate-300 rounded-lg px-2 py-1.5 text-xs outline-none"
+                      >
+                        <option value="ALL">Semua Tipe Outlet</option>
+                        <option value="Grosir Besar">Grosir Besar</option>
+                        <option value="Supermarket">Supermarket</option>
+                        <option value="Toko Kelontong">Toko Kelontong</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Table */}
+                  <div className="overflow-x-auto border border-slate-200 rounded-xl">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="py-2.5 px-3">Kode Outlet</th>
+                          <th className="py-2.5 px-3">Nama Toko / Outlet</th>
+                          <th className="py-2.5 px-3">Tipe Saluran</th>
+                          <th className="py-2.5 px-3">Wilayah / Cabang</th>
+                          <th className="py-2.5 px-3 text-right">Plafon Kredit (IDR)</th>
+                          <th className="py-2.5 px-3 text-center">TOP (Hari)</th>
+                          <th className="py-2.5 px-3 text-center">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 font-medium">
+                        {outlets
+                          .filter(o => {
+                            const matchSearch = (o.outlet_name || "").toLowerCase().includes(outletSearch.toLowerCase()) ||
+                                                (o.outlet_id || "").toLowerCase().includes(outletSearch.toLowerCase());
+                            const matchRegion = outletRegionFilter === "ALL" || o.region === outletRegionFilter;
+                            const matchType = outletTypeFilter === "ALL" || o.outlet_type === outletTypeFilter;
+                            return matchSearch && matchRegion && matchType;
+                          })
+                          .map((o) => (
+                            <tr key={o.outlet_id} className="hover:bg-slate-50/80 transition">
+                              <td className="py-2.5 px-3 font-mono font-bold text-slate-800">{o.outlet_id}</td>
+                              <td className="py-2.5 px-3 font-bold text-slate-900">{o.outlet_name}</td>
+                              <td className="py-2.5 px-3">
+                                <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-semibold text-[10px]">
+                                  {o.outlet_type}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-3 text-slate-600">{o.region} - {o.branch}</td>
+                              <td className="py-2.5 px-3 text-right font-mono font-bold text-[#56CA00]">
+                                Rp {Number(o.credit_limit_idr || 0).toLocaleString('id-ID')}
+                              </td>
+                              <td className="py-2.5 px-3 text-center font-mono">{o.payment_term_days} Hari</td>
+                              <td className="py-2.5 px-3 text-center space-x-1">
+                                <button
+                                  onClick={() => setEditingItem({ mode: "edit", type: "outlets", data: { ...o } })}
+                                  className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
+                                  title="Edit"
+                                >
+                                  <i className="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteMasterItem("outlets", o.outlet_id)}
+                                  className="p-1.5 text-red-600 hover:bg-red-50 rounded"
+                                  title="Hapus"
+                                >
+                                  <i className="fa-solid fa-trash-can"></i>
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* TABEL MASTER: PRODUCTS */}
+              {masterSubTab === "products" && (
+                <div className="space-y-3">
+                  {/* Filter Toolbar */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <div className="flex items-center space-x-2 flex-1 max-w-sm">
+                      <i className="fa-solid fa-magnifying-glass text-slate-400 text-xs"></i>
+                      <input
+                        type="text"
+                        placeholder="Cari SKU, nama produk, brand..."
+                        value={productSearch}
+                        onChange={(e) => setProductSearch(e.target.value)}
+                        className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs outline-none focus:border-[#8C57FF]"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2 text-xs">
+                      <select
+                        value={productBrandFilter}
+                        onChange={(e) => setProductBrandFilter(e.target.value)}
+                        className="bg-white border border-slate-300 rounded-lg px-2 py-1.5 text-xs outline-none"
+                      >
+                        <option value="ALL">Semua Brand</option>
+                        <option value="Kacang Dua Kelinci">Kacang Dua Kelinci</option>
+                        <option value="Sukro">Sukro</option>
+                        <option value="Deka Wafer">Deka Wafer</option>
+                        <option value="TicTac">TicTac</option>
+                        <option value="Fuzo">Fuzo</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Table */}
+                  <div className="overflow-x-auto border border-slate-200 rounded-xl">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="py-2.5 px-3">Kode SKU</th>
+                          <th className="py-2.5 px-3">Nama Produk</th>
+                          <th className="py-2.5 px-3">Brand</th>
+                          <th className="py-2.5 px-3 text-center">Isi / Karton</th>
+                          <th className="py-2.5 px-3 text-right">Harga HET (IDR)</th>
+                          <th className="py-2.5 px-3 text-right">Harga Grosir (IDR)</th>
+                          <th className="py-2.5 px-3 text-center">Shelf Life</th>
+                          <th className="py-2.5 px-3 text-center">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 font-medium">
+                        {products
+                          .filter(p => {
+                            const matchSearch = (p.sku_name || "").toLowerCase().includes(productSearch.toLowerCase()) ||
+                                                (p.sku_id || "").toLowerCase().includes(productSearch.toLowerCase());
+                            const matchBrand = productBrandFilter === "ALL" || p.brand === productBrandFilter;
+                            return matchSearch && matchBrand;
+                          })
+                          .map((p) => (
+                            <tr key={p.sku_id} className="hover:bg-slate-50/80 transition">
+                              <td className="py-2.5 px-3 font-mono font-bold text-slate-800">{p.sku_id}</td>
+                              <td className="py-2.5 px-3 font-bold text-slate-900">{p.sku_name}</td>
+                              <td className="py-2.5 px-3">
+                                <span className="bg-purple-50 text-[#8C57FF] px-2 py-0.5 rounded font-bold text-[10px]">
+                                  {p.brand}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-3 text-center font-mono">{p.carton_pack_qty} Pcs</td>
+                              <td className="py-2.5 px-3 text-right font-mono">
+                                Rp {Number(p.price_het_idr || 0).toLocaleString('id-ID')}
+                              </td>
+                              <td className="py-2.5 px-3 text-right font-mono font-bold text-emerald-600">
+                                Rp {Number(p.price_wholesale_idr || 0).toLocaleString('id-ID')}
+                              </td>
+                              <td className="py-2.5 px-3 text-center font-mono">{p.shelf_life_days || 365} Hari</td>
+                              <td className="py-2.5 px-3 text-center space-x-1">
+                                <button
+                                  onClick={() => setEditingItem({ mode: "edit", type: "products", data: { ...p } })}
+                                  className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
+                                  title="Edit"
+                                >
+                                  <i className="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteMasterItem("products", p.sku_id)}
+                                  className="p-1.5 text-red-600 hover:bg-red-50 rounded"
+                                  title="Hapus"
+                                >
+                                  <i className="fa-solid fa-trash-can"></i>
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* TABEL MASTER: WAREHOUSES */}
+              {masterSubTab === "warehouses" && (
+                <div className="space-y-3">
+                  {/* Filter Toolbar */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <div className="flex items-center space-x-2 flex-1 max-w-sm">
+                      <i className="fa-solid fa-magnifying-glass text-slate-400 text-xs"></i>
+                      <input
+                        type="text"
+                        placeholder="Cari kode gudang, nama depo..."
+                        value={whSearch}
+                        onChange={(e) => setWhSearch(e.target.value)}
+                        className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs outline-none focus:border-[#8C57FF]"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2 text-xs">
+                      <select
+                        value={whRegionFilter}
+                        onChange={(e) => setWhRegionFilter(e.target.value)}
+                        className="bg-white border border-slate-300 rounded-lg px-2 py-1.5 text-xs outline-none"
+                      >
+                        <option value="ALL">Semua Wilayah</option>
+                        <option value="Jawa Barat">Jawa Barat</option>
+                        <option value="Jawa Tengah">Jawa Tengah</option>
+                        <option value="Jawa Timur">Jawa Timur</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Table */}
+                  <div className="overflow-x-auto border border-slate-200 rounded-xl">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="py-2.5 px-3">Kode Gudang</th>
+                          <th className="py-2.5 px-3">Nama Depo / Gudang</th>
+                          <th className="py-2.5 px-3">Wilayah</th>
+                          <th className="py-2.5 px-3">Cabang</th>
+                          <th className="py-2.5 px-3 text-right">Kapasitas (Karton)</th>
+                          <th className="py-2.5 px-3 text-center">Status</th>
+                          <th className="py-2.5 px-3 text-center">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 font-medium">
+                        {warehouses
+                          .filter(w => {
+                            const matchSearch = (w.warehouse_name || "").toLowerCase().includes(whSearch.toLowerCase()) ||
+                                                (w.warehouse_id || "").toLowerCase().includes(whSearch.toLowerCase());
+                            const matchRegion = whRegionFilter === "ALL" || w.region === whRegionFilter;
+                            return matchSearch && matchRegion;
+                          })
+                          .map((w) => (
+                            <tr key={w.warehouse_id} className="hover:bg-slate-50/80 transition">
+                              <td className="py-2.5 px-3 font-mono font-bold text-slate-800">{w.warehouse_id}</td>
+                              <td className="py-2.5 px-3 font-bold text-slate-900">{w.warehouse_name}</td>
+                              <td className="py-2.5 px-3 text-slate-600">{w.region}</td>
+                              <td className="py-2.5 px-3 text-slate-600">{w.branch}</td>
+                              <td className="py-2.5 px-3 text-right font-mono font-bold text-blue-600">
+                                {Number(w.capacity_carton || 10000).toLocaleString('id-ID')} Karton
+                              </td>
+                              <td className="py-2.5 px-3 text-center">
+                                <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-bold text-[10px]">
+                                  {w.status || "ACTIVE"}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-3 text-center space-x-1">
+                                <button
+                                  onClick={() => setEditingItem({ mode: "edit", type: "warehouses", data: { ...w } })}
+                                  className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
+                                  title="Edit"
+                                >
+                                  <i className="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteMasterItem("warehouses", w.warehouse_id)}
+                                  className="p-1.5 text-red-600 hover:bg-red-50 rounded"
+                                  title="Hapus"
+                                >
+                                  <i className="fa-solid fa-trash-can"></i>
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
             </div>
           )}
 
@@ -1433,6 +2031,349 @@ export default function HomePage() {
             <div className="pt-3 border-t flex justify-end space-x-2">
               <button onClick={() => setSalesCheckOutModal(false)} className="px-4 py-2 bg-slate-100 rounded-lg text-xs font-semibold">Batal</button>
               <button onClick={handleSalesCheckOutSubmit} className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold">Simpan Take Order</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL EDIT / TAMBAH MASTER DATA */}
+      {editingItem && (
+        <div className="fixed inset-0 bg-slate-950/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4">
+            <h3 className="font-bold text-slate-900 text-sm flex items-center">
+              <i className="fa-solid fa-pen-to-square text-[#8C57FF] mr-2"></i>
+              <span>{editingItem.mode === "add" ? "Tambah Data Master" : "Edit Data Master"}: {editingItem.type.toUpperCase()}</span>
+            </h3>
+
+            <div className="space-y-3 text-xs max-h-[70vh] overflow-y-auto pr-1">
+              {/* Form fields for Employees */}
+              {editingItem.type === "employees" && (
+                <>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">NIP / Employee ID</label>
+                    <input
+                      type="text"
+                      disabled={editingItem.mode === "edit"}
+                      value={editingItem.data.employee_id || ""}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, employee_id: e.target.value } })}
+                      className="w-full p-2 border rounded-lg bg-slate-50 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Nama Lengkap</label>
+                    <input
+                      type="text"
+                      value={editingItem.data.full_name || ""}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, full_name: e.target.value } })}
+                      className="w-full p-2 border rounded-lg font-bold"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Email</label>
+                      <input
+                        type="email"
+                        value={editingItem.data.email || ""}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, email: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">No Telepon</label>
+                      <input
+                        type="text"
+                        value={editingItem.data.phone || ""}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, phone: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Departemen</label>
+                      <select
+                        value={editingItem.data.department || "SALES"}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, department: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      >
+                        <option value="SALES">SALES</option>
+                        <option value="WAREHOUSE">WAREHOUSE</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Level / Role</label>
+                      <select
+                        value={editingItem.data.role_type || "STAFF"}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, role_type: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      >
+                        <option value="MANAGER">MANAGER</option>
+                        <option value="SUPERVISOR">SUPERVISOR</option>
+                        <option value="STAFF">STAFF</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Jabatan (Job Title)</label>
+                    <input
+                      type="text"
+                      value={editingItem.data.job_title || ""}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, job_title: e.target.value } })}
+                      className="w-full p-2 border rounded-lg"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Wilayah</label>
+                      <input
+                        type="text"
+                        value={editingItem.data.region || "Jawa Barat"}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, region: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Cabang</label>
+                      <input
+                        type="text"
+                        value={editingItem.data.branch || "Bandung"}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, branch: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Depo Gudang (Opsional)</label>
+                    <input
+                      type="text"
+                      value={editingItem.data.warehouse_id || ""}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, warehouse_id: e.target.value } })}
+                      className="w-full p-2 border rounded-lg font-mono"
+                      placeholder="Contoh: WH-BDG"
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Form fields for Outlets */}
+              {editingItem.type === "outlets" && (
+                <>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Kode Outlet</label>
+                    <input
+                      type="text"
+                      disabled={editingItem.mode === "edit"}
+                      value={editingItem.data.outlet_id || ""}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, outlet_id: e.target.value } })}
+                      className="w-full p-2 border rounded-lg bg-slate-50 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Nama Toko / Outlet</label>
+                    <input
+                      type="text"
+                      value={editingItem.data.outlet_name || ""}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, outlet_name: e.target.value } })}
+                      className="w-full p-2 border rounded-lg font-bold"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Tipe Saluran</label>
+                      <select
+                        value={editingItem.data.outlet_type || "Toko Kelontong"}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, outlet_type: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      >
+                        <option value="Grosir Besar">Grosir Besar</option>
+                        <option value="Supermarket">Supermarket</option>
+                        <option value="Toko Kelontong">Toko Kelontong</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">TOP (Hari)</label>
+                      <input
+                        type="number"
+                        value={editingItem.data.payment_term_days || 14}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, payment_term_days: parseInt(e.target.value) || 0 } })}
+                        className="w-full p-2 border rounded-lg font-mono"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Plafon Kredit (IDR)</label>
+                    <input
+                      type="number"
+                      value={editingItem.data.credit_limit_idr || 0}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, credit_limit_idr: parseFloat(e.target.value) || 0 } })}
+                      className="w-full p-2 border rounded-lg font-bold text-emerald-600"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Wilayah</label>
+                      <input
+                        type="text"
+                        value={editingItem.data.region || "Jawa Barat"}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, region: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Cabang</label>
+                      <input
+                        type="text"
+                        value={editingItem.data.branch || "Bandung"}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, branch: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Form fields for Products */}
+              {editingItem.type === "products" && (
+                <>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Kode SKU</label>
+                    <input
+                      type="text"
+                      disabled={editingItem.mode === "edit"}
+                      value={editingItem.data.sku_id || ""}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, sku_id: e.target.value } })}
+                      className="w-full p-2 border rounded-lg bg-slate-50 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Nama Produk SKU</label>
+                    <input
+                      type="text"
+                      value={editingItem.data.sku_name || ""}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, sku_name: e.target.value } })}
+                      className="w-full p-2 border rounded-lg font-bold"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Brand</label>
+                      <input
+                        type="text"
+                        value={editingItem.data.brand || "Kacang Dua Kelinci"}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, brand: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Isi per Karton</label>
+                      <input
+                        type="number"
+                        value={editingItem.data.carton_pack_qty || 24}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, carton_pack_qty: parseInt(e.target.value) || 0 } })}
+                        className="w-full p-2 border rounded-lg font-mono"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Harga HET (IDR)</label>
+                      <input
+                        type="number"
+                        value={editingItem.data.price_het_idr || 0}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, price_het_idr: parseFloat(e.target.value) || 0 } })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Harga Grosir (IDR)</label>
+                      <input
+                        type="number"
+                        value={editingItem.data.price_wholesale_idr || 0}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, price_wholesale_idr: parseFloat(e.target.value) || 0 } })}
+                        className="w-full p-2 border rounded-lg font-bold text-emerald-600"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Shelf Life (Hari)</label>
+                    <input
+                      type="number"
+                      value={editingItem.data.shelf_life_days || 365}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, shelf_life_days: parseInt(e.target.value) || 0 } })}
+                      className="w-full p-2 border rounded-lg font-mono"
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Form fields for Warehouses */}
+              {editingItem.type === "warehouses" && (
+                <>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Kode Gudang</label>
+                    <input
+                      type="text"
+                      disabled={editingItem.mode === "edit"}
+                      value={editingItem.data.warehouse_id || ""}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, warehouse_id: e.target.value } })}
+                      className="w-full p-2 border rounded-lg bg-slate-50 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Nama Depo / Gudang</label>
+                    <input
+                      type="text"
+                      value={editingItem.data.warehouse_name || ""}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, warehouse_name: e.target.value } })}
+                      className="w-full p-2 border rounded-lg font-bold"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Wilayah</label>
+                      <input
+                        type="text"
+                        value={editingItem.data.region || "Jawa Barat"}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, region: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-700 font-semibold mb-1">Cabang</label>
+                      <input
+                        type="text"
+                        value={editingItem.data.branch || "Bandung"}
+                        onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, branch: e.target.value } })}
+                        className="w-full p-2 border rounded-lg"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-slate-700 font-semibold mb-1">Kapasitas Maksimal (Karton)</label>
+                    <input
+                      type="number"
+                      value={editingItem.data.capacity_carton || 15000}
+                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, capacity_carton: parseInt(e.target.value) || 0 } })}
+                      className="w-full p-2 border rounded-lg font-mono font-bold text-blue-600"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="pt-3 border-t flex justify-end space-x-2">
+              <button
+                onClick={() => setEditingItem(null)}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleSaveMasterItem}
+                className="px-4 py-2 bg-[#8C57FF] hover:bg-[#7E4EE6] text-white rounded-lg text-xs font-bold shadow"
+              >
+                Simpan Perubahan
+              </button>
             </div>
           </div>
         </div>

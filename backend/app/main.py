@@ -178,6 +178,67 @@ def export_sales(
     conn.close()
     return rows
 
+@app.post("/api/v1/dashboard/import-sales-csv")
+def import_sales_csv_endpoint(payload: Dict[str, Any] = Body(...)):
+    """
+    Import file sales.csv atau data transaksi penjualan baru langsung ke fact_sales DWH.
+    """
+    import csv
+    import io
+    csv_content = payload.get("csv_content", "").strip()
+    if not csv_content:
+        raise HTTPException(status_code=400, detail="Isi file CSV tidak boleh kosong.")
+    
+    f = io.StringIO(csv_content)
+    reader = csv.DictReader(f)
+    conn = dwh_service.get_db()
+    cur = conn.cursor()
+    imported_count = 0
+    
+    for r in reader:
+        try:
+            date = r.get("date") or r.get("Tanggal") or "2026-10-31"
+            inv_no = r.get("invoice_no") or r.get("No Faktur") or f"INV-IMP-{imported_count+1:05d}"
+            entity = r.get("entity_code") or r.get("Entitas") or "DK-HO"
+            t_type = r.get("transaction_type") or r.get("Tipe") or "SALES_ORDER"
+            reg = r.get("region") or r.get("Wilayah") or "Jawa Barat"
+            branch = r.get("branch") or r.get("Cabang") or "Bandung"
+            o_id = r.get("outlet_id") or r.get("Kode Outlet") or "OUT-DEFAULT"
+            o_name = r.get("outlet_name") or r.get("Nama Outlet") or "Outlet Umum"
+            o_type = r.get("outlet_type") or r.get("Tipe Outlet") or "Toko Kelontong"
+            salesman = r.get("salesman") or r.get("Salesman") or "Budi Santoso"
+            brand = r.get("brand") or r.get("Brand") or "Kacang Dua Kelinci"
+            sku = r.get("sku") or r.get("SKU") or "Kacang Garing 200g"
+            qty = int(float(r.get("qty_carton") or r.get("Qty") or 1))
+            price = float(r.get("price_per_carton_idr") or r.get("Harga") or 120000)
+            gross = float(r.get("gross_sales_idr") or r.get("Gross") or (qty * price))
+            disc = float(r.get("discount_idr") or r.get("Diskon") or 0)
+            net = float(r.get("net_sales_idr") or r.get("Net") or (gross - disc))
+
+            cur.execute("""
+                INSERT INTO fact_sales (
+                    date, invoice_no, entity_code, transaction_type, region, branch,
+                    outlet_id, outlet_name, outlet_type, salesman, brand, sku,
+                    qty_carton, price_per_carton_idr, gross_sales_idr, discount_idr, net_sales_idr
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(entity_code, invoice_no, sku) DO UPDATE SET
+                    qty_carton = excluded.qty_carton,
+                    gross_sales_idr = excluded.gross_sales_idr,
+                    discount_idr = excluded.discount_idr,
+                    net_sales_idr = excluded.net_sales_idr;
+            """, (date, inv_no, entity, t_type, reg, branch, o_id, o_name, o_type, salesman, brand, sku, qty, price, gross, disc, net))
+            imported_count += 1
+        except Exception as ex:
+            continue
+
+    conn.commit()
+    conn.close()
+    return {
+        "success": True,
+        "imported_rows": imported_count,
+        "message": f"Berhasil mengimpor {imported_count} baris transaksi penjualan ke fact_sales DWH."
+    }
+
 # --- AI INSIGHT AGENT & TEAMS DISPATCH ---
 @app.get("/api/v1/agent/preview-summary")
 def preview_agent_summary(user: Dict[str, Any] = Depends(get_current_user)):

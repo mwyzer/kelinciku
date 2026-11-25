@@ -128,7 +128,9 @@ def init_db():
     conn.close()
 
 def load_sales_csv():
-    sales_file = ROOT_DIR / "sales.csv"
+    sales_file = ROOT_DIR / "csv" / "sales.csv"
+    if not sales_file.exists():
+        sales_file = ROOT_DIR / "sales.csv"
     if not sales_file.exists():
         print("sales.csv not found at", sales_file)
         return
@@ -179,7 +181,9 @@ def load_sales_csv():
     print("Loaded sales rows:", count)
 
 def load_stock_csv():
-    stock_file = ROOT_DIR / "stock.csv"
+    stock_file = ROOT_DIR / "csv" / "stock.csv"
+    if not stock_file.exists():
+        stock_file = ROOT_DIR / "stock.csv"
     if not stock_file.exists():
         print("stock.csv not found at", stock_file)
         return
@@ -229,7 +233,9 @@ def load_stock_csv():
     print("Loaded stock rows:", count)
 
 def load_budget_csv():
-    budget_file = ROOT_DIR / "budget.csv"
+    budget_file = ROOT_DIR / "csv" / "budget.csv"
+    if not budget_file.exists():
+        budget_file = ROOT_DIR / "budget.csv"
     if not budget_file.exists():
         print("budget.csv not found at", budget_file)
         return

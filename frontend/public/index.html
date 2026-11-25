@@ -103,6 +103,11 @@
           <button id="btnApplyFilter" class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-sm">
             <i class="fa-solid fa-filter mr-1.5"></i>Terapkan
           </button>
+          <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-file-import"></i>
+            <span>Impor CSV Sales</span>
+            <input type="file" id="inputSalesCsv" accept=".csv" class="hidden" />
+          </label>
           <button id="btnExportCsv" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg shadow-sm">
             <i class="fa-solid fa-file-csv text-emerald-600 mr-1.5"></i>Ekspor CSV
           </button>
@@ -792,6 +797,48 @@
         });
         await loadEsignDocs();
       });
+
+      document.getElementById('btnExportCsv').addEventListener('click', () => {
+        const start = document.getElementById('startDate').value;
+        const end = document.getElementById('endDate').value;
+        const reg = document.getElementById('filterRegion').value;
+        const br = document.getElementById('filterBranch').value;
+        const brand = document.getElementById('filterBrand').value;
+        const params = new URLSearchParams({ start_date: start, end_date: end, region: reg, branch: br, brand: brand });
+        window.open(`${API_BASE}/dashboard/export?${params}`, '_blank');
+      });
+
+      const inputSalesCsv = document.getElementById('inputSalesCsv');
+      if (inputSalesCsv) {
+        inputSalesCsv.addEventListener('change', (event) => {
+          const file = event.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            const csvContent = e.target.result;
+            try {
+              const res = await fetch(`${API_BASE}/dashboard/import-sales-csv`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ csv_content: csvContent })
+              });
+              const d = await res.json();
+              if (d.success) {
+                alert(`Sukses! ${d.message}`);
+                await loadOverview();
+                await loadCharts();
+                await loadBreakdown();
+              } else {
+                alert(`Gagal: ${d.detail || 'Terjadi kesalahan'}`);
+              }
+            } catch (err) {
+              alert('Gagal mengimpor file: ' + err);
+            }
+          };
+          reader.readAsText(file);
+          event.target.value = '';
+        });
+      }
 
       document.querySelectorAll('.btn-dim').forEach(btn => {
         btn.addEventListener('click', () => {

@@ -57,6 +57,24 @@ services:
       - "3000:3000"
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+      - NEXT_PUBLIC_STAFF_URL=http://localhost:3001
+      - BACKEND_API_INTERNAL_URL=http://backend:8000/api/:path*
+    depends_on:
+      - backend
+    networks:
+      - duakelinci-network
+
+  frontend-staff:
+    build:
+      context: ./frontend-staff
+      dockerfile: Dockerfile
+    container_name: duakelinci-frontend-staff
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+      - NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000
       - BACKEND_API_INTERNAL_URL=http://backend:8000/api/:path*
     depends_on:
       - backend

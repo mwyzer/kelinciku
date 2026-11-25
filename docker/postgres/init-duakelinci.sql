@@ -176,15 +176,26 @@ CREATE TABLE IF NOT EXISTS esign_audit_trail (
 );
 
 
--- Seed data for user_scope (8 rows)
+-- Seed data for user_scope (19 rows)
 INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (8, 'admin@duakelinci.id', 'Budi Santoso', 'admin', 'NATIONAL', 'ALL') ON CONFLICT DO NOTHING;
-INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (9, 'head.sales@duakelinci.id', 'Rudi Hartono', 'head_sales', 'NATIONAL', 'ALL') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (9, 'head.sales@duakelinci.id', 'Rudi Hartono (Sales Director / GM)', 'head_sales', 'NATIONAL', 'ALL') ON CONFLICT DO NOTHING;
 INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (10, 'bm.sukro@duakelinci.id', 'Maya Indah', 'brand_manager', 'BRAND', 'Sukro') ON CONFLICT DO NOTHING;
 INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (11, 'bm.dua_kelinci@duakelinci.id', 'Andi Wijaya', 'brand_manager', 'BRAND', 'Kacang Dua Kelinci') ON CONFLICT DO NOTHING;
-INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (12, 'hr.jabar@duakelinci.id', 'Dedi Kurniawan', 'head_region', 'REGION', 'Jawa Barat') ON CONFLICT DO NOTHING;
-INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (13, 'hr.jatim@duakelinci.id', 'Siti Rahma', 'head_region', 'REGION', 'Jawa Timur') ON CONFLICT DO NOTHING;
-INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (14, 'hr.jabodetabek@duakelinci.id', 'Hendra Pratama', 'head_region', 'REGION', 'Jabodetabek') ON CONFLICT DO NOTHING;
-INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (15, 'muhammad.wyzer@gmail.com', 'Muhammad Wyzer', 'head_sales', 'NATIONAL', 'ALL') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (12, 'hr.jabar@duakelinci.id', 'Dedi Kurniawan (Regional Sales Manager Jabar)', 'head_sales', 'REGION', 'Jawa Barat') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (13, 'hr.jatim@duakelinci.id', 'Siti Rahma (Regional Sales Manager Jatim)', 'head_sales', 'REGION', 'Jawa Timur') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (14, 'hr.jabodetabek@duakelinci.id', 'Hendra Pratama (Regional Sales Manager Jabodetabek)', 'head_sales', 'REGION', 'Jabodetabek') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (15, 'muhammad.wyzer@gmail.com', 'Muhammad Wyzer (Head of Sales)', 'head_sales', 'NATIONAL', 'ALL') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (21, 'gita.sales@duakelinci.id', 'Gita Savitri (Area Sales Supervisor)', 'head_sales', 'REGION', 'Jawa Barat') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (22, 'hendra.sales@duakelinci.id', 'Hendra Gunawan (Field Salesman Senior)', 'head_sales', 'REGION', 'Jawa Barat') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (23, 'fajar.sales@duakelinci.id', 'Fajar Nugraha (Field Salesman)', 'head_sales', 'REGION', 'Jabodetabek') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (24, 'putri.sales@duakelinci.id', 'Putri Lestari (Field Salesman)', 'head_sales', 'REGION', 'Jawa Timur') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (25, 'bambang.warehouse@duakelinci.id', 'Bambang Soeprapto (Head of Warehouse & Logistics)', 'warehouse_lead', 'NATIONAL', 'ALL') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (26, 'agus.wh.bdg@duakelinci.id', 'Agus Setiawan (Warehouse Manager Bandung)', 'warehouse_lead', 'REGION', 'Jawa Barat') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (27, 'tri.wh.sby@duakelinci.id', 'Tri Wahyuni (Warehouse Manager Surabaya)', 'warehouse_lead', 'REGION', 'Jawa Timur') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (28, 'joko.wh.smg@duakelinci.id', 'Joko Purwanto (Warehouse Manager Semarang)', 'warehouse_lead', 'REGION', 'Jawa Tengah') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (29, 'ilham.spv.bdg@duakelinci.id', 'Ilham Syahputra (Warehouse Supervisor)', 'warehouse_lead', 'REGION', 'Jawa Barat') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (30, 'surya.picker@duakelinci.id', 'Surya Saputra (FEFO Picking Lead Operator)', 'warehouse_lead', 'REGION', 'Jawa Barat') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (31, 'rian.checker@duakelinci.id', 'Rian Hidayat (Inbound/Outbound Inspector)', 'warehouse_lead', 'REGION', 'Jabodetabek') ON CONFLICT DO NOTHING;
 
 -- Seed data for master_products (13 rows)
 INSERT INTO master_products (sku_id, sku_name, brand, category, carton_pack_qty, price_het_idr, price_wholesale_idr, shelf_life_days, status) VALUES ('SKU-KAC-001', 'Kacang Kulit 70g', 'Kacang Dua Kelinci', 'Snack Kacang & Biskuit', 24, 150000.0, 135000.0, 365, 'ACTIVE') ON CONFLICT DO NOTHING;
@@ -12914,43 +12925,3 @@ INSERT INTO esign_audit_trail (id, doc_id, action, actor_email, actor_name, depa
 INSERT INTO esign_audit_trail (id, doc_id, action, actor_email, actor_name, department, timestamp, details) VALUES (10, '30295837-69be-4bd6-ab2d-cc6f15831db0', 'HOD_APPROVED', 'muhammad.wyzer@gmail.com', 'Muhammad Wyzer', 'SALES', '2026-11-24 15:43:23 WIB', 'Disetujui secara digital oleh Head of Sales (muhammad.wyzer@gmail.com).') ON CONFLICT DO NOTHING;
 INSERT INTO esign_audit_trail (id, doc_id, action, actor_email, actor_name, department, timestamp, details) VALUES (11, '30295837-69be-4bd6-ab2d-cc6f15831db0', 'WORKFLOW_COMPLETED', 'system', 'Sistem Otorisasi Terpadu', 'SYSTEM', '2026-11-24 15:43:23 WIB', 'Seluruh persetujuan Head of Department telah lengkap.') ON CONFLICT DO NOTHING;
 
-
-
--- ========================================================
--- MASTER EMPLOYEES (Sales & Warehouse Personas)
--- ========================================================
-CREATE TABLE IF NOT EXISTS master_employees (
-    id SERIAL PRIMARY KEY,
-    employee_id VARCHAR(50) UNIQUE NOT NULL,
-    full_name VARCHAR(150) NOT NULL,
-    email VARCHAR(150) UNIQUE NOT NULL,
-    phone VARCHAR(50),
-    department VARCHAR(50) NOT NULL,
-    job_title VARCHAR(100) NOT NULL,
-    role_type VARCHAR(50) NOT NULL,
-    region VARCHAR(100),
-    branch VARCHAR(100),
-    warehouse_id VARCHAR(50),
-    status VARCHAR(20) DEFAULT 'ACTIVE',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-INSERT INTO master_employees (employee_id, full_name, email, phone, department, job_title, role_type, region, branch, warehouse_id, status) VALUES
-('EMP-SLS-001', 'Muhammad Wyzer', 'muhammad.wyzer@gmail.com', '081234567890', 'SALES', 'Head of Sales', 'MANAGER', 'Nasional', 'Pusat', NULL, 'ACTIVE'),
-('EMP-SLS-002', 'Rudi Hartono', 'head.sales@duakelinci.id', '081298765432', 'SALES', 'Sales Director / GM', 'MANAGER', 'Nasional', 'Pusat', NULL, 'ACTIVE'),
-('EMP-SLS-003', 'Dedi Kurniawan', 'hr.jabar@duakelinci.id', '081311223344', 'SALES', 'Regional Sales Manager Jabar', 'MANAGER', 'Jawa Barat', 'Bandung', NULL, 'ACTIVE'),
-('EMP-SLS-004', 'Siti Rahma', 'hr.jatim@duakelinci.id', '081322334455', 'SALES', 'Regional Sales Manager Jatim', 'MANAGER', 'Jawa Timur', 'Surabaya', NULL, 'ACTIVE'),
-('EMP-SLS-005', 'Hendra Pratama', 'hr.jabodetabek@duakelinci.id', '081333445566', 'SALES', 'Regional Sales Manager Jabodetabek', 'MANAGER', 'Jabodetabek', 'Jakarta Barat', NULL, 'ACTIVE'),
-('EMP-SLS-006', 'Gita Savitri', 'gita.sales@duakelinci.id', '081344556677', 'SALES', 'Area Sales Supervisor', 'SUPERVISOR', 'Jawa Barat', 'Bandung', NULL, 'ACTIVE'),
-('EMP-SLS-007', 'Hendra Gunawan', 'hendra.sales@duakelinci.id', '081355667788', 'SALES', 'Field Salesman Senior', 'STAFF', 'Jawa Barat', 'Bandung', NULL, 'ACTIVE'),
-('EMP-SLS-008', 'Fajar Nugraha', 'fajar.sales@duakelinci.id', '081366778899', 'SALES', 'Field Salesman', 'STAFF', 'Jabodetabek', 'Bekasi', NULL, 'ACTIVE'),
-('EMP-SLS-009', 'Putri Lestari', 'putri.sales@duakelinci.id', '081377889900', 'SALES', 'Field Salesman', 'STAFF', 'Jawa Timur', 'Surabaya', NULL, 'ACTIVE'),
-('EMP-WMS-001', 'Bambang Soeprapto', 'bambang.warehouse@duakelinci.id', '081255443322', 'WAREHOUSE', 'Head of Warehouse & Logistics', 'MANAGER', 'Nasional', 'Pusat', 'WH-BDG', 'ACTIVE'),
-('EMP-WMS-002', 'Agus Setiawan', 'agus.wh.bdg@duakelinci.id', '081266554433', 'WAREHOUSE', 'Warehouse Manager Bandung', 'MANAGER', 'Jawa Barat', 'Bandung', 'WH-BDG', 'ACTIVE'),
-('EMP-WMS-003', 'Tri Wahyuni', 'tri.wh.sby@duakelinci.id', '081277665544', 'WAREHOUSE', 'Warehouse Manager Surabaya', 'MANAGER', 'Jawa Timur', 'Surabaya', 'WH-SBY', 'ACTIVE'),
-('EMP-WMS-004', 'Joko Purwanto', 'joko.wh.smg@duakelinci.id', '081288776655', 'WAREHOUSE', 'Warehouse Manager Semarang', 'MANAGER', 'Jawa Tengah', 'Semarang', 'WH-SMG', 'ACTIVE'),
-('EMP-WMS-005', 'Ilham Syahputra', 'ilham.spv.bdg@duakelinci.id', '081299887766', 'WAREHOUSE', 'Warehouse Supervisor', 'SUPERVISOR', 'Jawa Barat', 'Bandung', 'WH-BDG', 'ACTIVE'),
-('EMP-WMS-006', 'Surya Saputra', 'surya.picker@duakelinci.id', '081211009988', 'WAREHOUSE', 'FEFO Picking Lead Operator', 'STAFF', 'Jawa Barat', 'Bandung', 'WH-BDG', 'ACTIVE'),
-('EMP-WMS-007', 'Rian Hidayat', 'rian.checker@duakelinci.id', '081222110099', 'WAREHOUSE', 'Inbound/Outbound Inspector', 'STAFF', 'Jabodetabek', 'Bekasi', 'WH-BEK', 'ACTIVE')
-ON CONFLICT (employee_id) DO NOTHING;
