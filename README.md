@@ -326,11 +326,11 @@ docker compose ps
 ```
 
 ### Konfigurasi Database PostgreSQL:
-- **Host:** `localhost` (atau `postgres` di dalam network docker)
+- **Host:** `127.0.0.1` (atau `postgres` di dalam network docker)
 - **Port:** `5432`
 - **Database:** `duakelinci_dwh`
 - **User:** `duakelinci_user`
-- **Password:** `***REMOVED***`
+- **Password:** diambil dari `POSTGRES_PASSWORD` di `.env` (salin dari `.env.example`, jangan di-commit)
 - **Volume Data Persisten:** `postgres_data`
 - **Inisialisasi Otomatis:** `docker/postgres/init-duakelinci.sql`
 
