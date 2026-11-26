@@ -1668,21 +1668,21 @@ export default function HomePage() {
                     <table className="w-full text-left text-xs">
                       <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
                         <tr className="whitespace-nowrap">
-                          <th className="py-2.5 px-3">date</th>
-                          <th className="py-2.5 px-3">invoice no</th>
-                          <th className="py-2.5 px-3">region</th>
-                          <th className="py-2.5 px-3">branch</th>
-                          <th className="py-2.5 px-3">outlet id</th>
-                          <th className="py-2.5 px-3">outlet name</th>
-                          <th className="py-2.5 px-3">outlet type</th>
-                          <th className="py-2.5 px-3">salesman</th>
-                          <th className="py-2.5 px-3">brand</th>
-                          <th className="py-2.5 px-3">sku</th>
-                          <th className="py-2.5 px-3 text-right">qty carton</th>
-                          <th className="py-2.5 px-3 text-right">price per carton idr</th>
-                          <th className="py-2.5 px-3 text-right">gross sales idr</th>
-                          <th className="py-2.5 px-3 text-right">discount idr</th>
-                          <th className="py-2.5 px-3 text-right">net sales idr</th>
+                          <th className="py-2.5 px-3">Date</th>
+                          <th className="py-2.5 px-3">Invoice No</th>
+                          <th className="py-2.5 px-3">Region</th>
+                          <th className="py-2.5 px-3">Branch</th>
+                          <th className="py-2.5 px-3">Outlet ID</th>
+                          <th className="py-2.5 px-3">Outlet Name</th>
+                          <th className="py-2.5 px-3">Outlet Type</th>
+                          <th className="py-2.5 px-3">Salesman</th>
+                          <th className="py-2.5 px-3">Brand</th>
+                          <th className="py-2.5 px-3">SKU</th>
+                          <th className="py-2.5 px-3 text-right">Qty Carton</th>
+                          <th className="py-2.5 px-3 text-right">Price Per Carton IDR</th>
+                          <th className="py-2.5 px-3 text-right">Gross Sales IDR</th>
+                          <th className="py-2.5 px-3 text-right">Discount IDR</th>
+                          <th className="py-2.5 px-3 text-right">Net Sales IDR</th>
                           <th className="py-2.5 px-3 text-center">Aksi</th>
                         </tr>
                       </thead>
