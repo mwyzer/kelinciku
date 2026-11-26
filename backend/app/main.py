@@ -596,7 +596,102 @@ def get_iot_devices_health():
 
 @app.post("/api/v1/iot/telemetry/ingest")
 def post_iot_telemetry(payload: Dict[str, Any] = Body(...)):
-    return iot_service.ingest_sensor_telemetry_enhanced(payload)
+    try:
+        return iot_service.ingest_sensor_telemetry_enhanced(payload)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except iot_service.IoTNotFound as le:
+        raise HTTPException(status_code=404, detail=str(le))
+
+@app.get("/api/v1/iot/telemetry/history")
+def get_iot_telemetry_history(machine_id: Optional[str] = None, limit: int = Query(500, ge=1, le=5000)):
+    return iot_service.get_telemetry_history(machine_id, limit)
+
+@app.get("/api/v1/iot/machines")
+def get_iot_machines(production_line: Optional[str] = None):
+    return iot_service.list_machines(production_line)
+
+@app.get("/api/v1/iot/machines/{machine_id}")
+def get_iot_machine_detail(machine_id: str):
+    try:
+        return iot_service.get_machine_detail(machine_id)
+    except iot_service.IoTNotFound as le:
+        raise HTTPException(status_code=404, detail=str(le))
+
+@app.get("/api/v1/iot/devices")
+def get_iot_devices():
+    return iot_service.get_iot_devices_health()
+
+@app.get("/api/v1/iot/alerts")
+def get_iot_alerts(status: Optional[str] = None, machine_id: Optional[str] = None,
+                   alert_type: Optional[str] = None, limit: int = Query(200, ge=1, le=2000)):
+    return iot_service.list_alerts(status, machine_id, alert_type, limit)
+
+@app.get("/api/v1/iot/alerts/active")
+def get_iot_alerts_active():
+    return iot_service.list_alerts("ACTIVE")
+
+@app.post("/api/v1/iot/health-check")
+def post_iot_health_check():
+    return iot_service.run_health_check()
+
+@app.post("/api/v1/iot/oee/calculate")
+def post_iot_oee_calculate(payload: Dict[str, Any] = Body(...)):
+    try:
+        shift = iot_service.current_shift()
+        return iot_service.calculate_oee(
+            payload["machine_id"],
+            payload.get("production_date") or shift["production_date"],
+            int(payload.get("shift_no") or shift["shift_no"]),
+        )
+    except KeyError:
+        raise HTTPException(status_code=400, detail="machine_id wajib diisi.")
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except iot_service.IoTNotFound as le:
+        raise HTTPException(status_code=404, detail=str(le))
+
+@app.get("/api/v1/iot/oee-summary")
+def get_iot_oee_summary(date_from: Optional[str] = None, date_to: Optional[str] = None):
+    return iot_service.get_oee_summary(date_from, date_to)
+
+@app.get("/api/v1/iot/oee-report")
+def get_iot_oee_report(date_from: Optional[str] = None, date_to: Optional[str] = None,
+                       machine_id: Optional[str] = None, shift_id: Optional[int] = None,
+                       production_line: Optional[str] = None):
+    return iot_service.get_oee_report(date_from, date_to, machine_id, shift_id, production_line)
+
+@app.get("/api/v1/iot/production-summary")
+def get_iot_production_summary(production_date: Optional[str] = None):
+    return iot_service.get_production_summary(production_date)
+
+@app.get("/api/v1/iot/production-report")
+def get_iot_production_report(date_from: Optional[str] = None, date_to: Optional[str] = None,
+                              machine_id: Optional[str] = None):
+    return iot_service.get_production_report(date_from, date_to, machine_id)
+
+@app.get("/api/v1/iot/downtime-report")
+def get_iot_downtime_report(date_from: Optional[str] = None, date_to: Optional[str] = None,
+                            machine_id: Optional[str] = None):
+    return iot_service.get_downtime_report(date_from, date_to, machine_id)
+
+def _iot_background_loop():
+    """Health check (DEVICE_OFFLINE, UNSCHEDULED_DOWNTIME) + hitung ulang OEE shift berjalan, tiap 60 detik."""
+    import time
+    interval = int(os.getenv("IOT_MONITOR_INTERVAL_SECONDS", "60"))
+    while True:
+        time.sleep(interval)
+        try:
+            iot_service.run_health_check()
+            iot_service.recalculate_current_shift_oee()
+        except Exception as ex:
+            print(f"[IoT] background loop error: {ex}")
+
+@app.on_event("startup")
+def _start_iot_monitor():
+    if os.getenv("IOT_MONITOR_ENABLED", "true").lower() in ("1", "true", "yes"):
+        import threading
+        threading.Thread(target=_iot_background_loop, daemon=True, name="iot-monitor").start()
 
 @app.patch("/api/v1/iot/alerts/{alert_id}/acknowledge")
 def patch_acknowledge_alert(alert_id: str, payload: Dict[str, Any] = Body(...)):
