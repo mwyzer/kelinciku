@@ -338,3 +338,54 @@ def sync_pending_to_qad() -> Dict[str, Any]:
         "timestamp": now_str,
         "erp_target": "QAD Adaptive ERP 2026 On-Premise"
     }
+
+
+def get_fefo_picking_recommendation(warehouse_id: str, sku: str, qty: int) -> Dict[str, Any]:
+    """Alokasi picking FEFO: batch dengan expiry terdekat diambil lebih dulu.
+
+    Memakai snapshot stok terbaru gudang+SKU; stok tersedia = on_hand - reserved.
+    """
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT batch_no, expiry_date, qty_on_hand_carton, qty_reserved_carton
+        FROM fact_stock
+        WHERE warehouse_id = ? AND sku = ?
+          AND date = (SELECT MAX(date) FROM fact_stock WHERE warehouse_id = ? AND sku = ?)
+        ORDER BY expiry_date ASC, batch_no ASC
+        """,
+        (warehouse_id, sku, warehouse_id, sku),
+    )
+    rows = [dict(r) for r in cur.fetchall()]
+    conn.close()
+
+    remaining = max(int(qty), 0)
+    allocations: List[Dict[str, Any]] = []
+    for r in rows:
+        if remaining <= 0:
+            break
+        available = int(r["qty_on_hand_carton"]) - int(r["qty_reserved_carton"])
+        if available <= 0:
+            continue
+        take = min(available, remaining)
+        allocations.append({
+            "batch_no": r["batch_no"],
+            "expiry_date": r["expiry_date"],
+            "available_qty": available,
+            "allocated_qty": take,
+        })
+        remaining -= take
+
+    allocated = qty - remaining
+    recommended = ", ".join(f"{a['batch_no']} ({a['allocated_qty']} krt, exp {a['expiry_date']})" for a in allocations)
+    return {
+        "warehouse_id": warehouse_id,
+        "sku": sku,
+        "requested_qty": qty,
+        "allocated_qty": allocated,
+        "shortage_qty": remaining,
+        "fulfilled": remaining == 0,
+        "fefo_allocations": allocations,
+        "recommended_batch": recommended or "Stok tidak tersedia",
+    }

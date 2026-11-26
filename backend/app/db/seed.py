@@ -115,12 +115,29 @@ def init_db():
     cur.execute("DELETE FROM user_scope;")
     users = [
         ("admin@duakelinci.id", "Budi Santoso", "admin", "NATIONAL", "ALL"),
-        ("head.sales@duakelinci.id", "Rudi Hartono", "head_sales", "NATIONAL", "ALL"),
+        ("head.sales@duakelinci.id", "Rudi Hartono (Sales Director / GM)", "head_sales", "NATIONAL", "ALL"),
         ("bm.sukro@duakelinci.id", "Maya Indah", "brand_manager", "BRAND", "Sukro"),
         ("bm.dua_kelinci@duakelinci.id", "Andi Wijaya", "brand_manager", "BRAND", "Kacang Dua Kelinci"),
-        ("hr.jabar@duakelinci.id", "Dedi Kurniawan", "head_region", "REGION", "Jawa Barat"),
-        ("hr.jatim@duakelinci.id", "Siti Rahma", "head_region", "REGION", "Jawa Timur"),
-        ("hr.jabodetabek@duakelinci.id", "Hendra Pratama", "head_region", "REGION", "Jabodetabek"),
+        ("hr.jabar@duakelinci.id", "Dedi Kurniawan (Regional Sales Manager Jabar)", "head_sales", "REGION", "Jawa Barat"),
+        ("hr.jatim@duakelinci.id", "Siti Rahma (Regional Sales Manager Jatim)", "head_sales", "REGION", "Jawa Timur"),
+        ("hr.jabodetabek@duakelinci.id", "Hendra Pratama (Regional Sales Manager Jabodetabek)", "head_sales", "REGION", "Jabodetabek"),
+        ("muhammad.wyzer@gmail.com", "Muhammad Wyzer (Head of Sales)", "head_sales", "NATIONAL", "ALL"),
+        ("gita.sales@duakelinci.id", "Gita Savitri (Area Sales Supervisor)", "head_sales", "REGION", "Jawa Barat"),
+        ("hendra.sales@duakelinci.id", "Hendra Gunawan (Field Salesman Senior)", "head_sales", "REGION", "Jawa Barat"),
+        ("fajar.sales@duakelinci.id", "Fajar Nugraha (Field Salesman)", "head_sales", "REGION", "Jabodetabek"),
+        ("putri.sales@duakelinci.id", "Putri Lestari (Field Salesman)", "head_sales", "REGION", "Jawa Timur"),
+        ("bambang.warehouse@duakelinci.id", "Bambang Soeprapto (Head of Warehouse & Logistics)", "warehouse_lead", "NATIONAL", "ALL"),
+        ("agus.wh.bdg@duakelinci.id", "Agus Setiawan (Warehouse Manager Bandung)", "warehouse_lead", "REGION", "Jawa Barat"),
+        ("tri.wh.sby@duakelinci.id", "Tri Wahyuni (Warehouse Manager Surabaya)", "warehouse_lead", "REGION", "Jawa Timur"),
+        ("joko.wh.smg@duakelinci.id", "Joko Purwanto (Warehouse Manager Semarang)", "warehouse_lead", "REGION", "Jawa Tengah"),
+        ("ilham.spv.bdg@duakelinci.id", "Ilham Syahputra (Warehouse Supervisor)", "warehouse_lead", "REGION", "Jawa Barat"),
+        ("surya.picker@duakelinci.id", "Surya Saputra (FEFO Picking Lead Operator)", "warehouse_lead", "REGION", "Jawa Barat"),
+        ("rian.checker@duakelinci.id", "Rian Hidayat (Inbound/Outbound Inspector)", "warehouse_lead", "REGION", "Jabodetabek"),
+        ("maya.indah@duakelinci.id", "Maya Indah (Head of Marketing)", "head_marketing", "NATIONAL", "ALL"),
+        ("rudi.hartono@duakelinci.id", "Rudi Hartono (Head of Finance)", "head_finance", "NATIONAL", "ALL"),
+        ("dedi.kurniawan@duakelinci.id", "Dedi Kurniawan (Head of Warehouse)", "warehouse_lead", "NATIONAL", "ALL"),
+        ("budi.santoso@duakelinci.id", "Budi Santoso (Field Salesman Jakarta)", "salesman", "REGION", "Jabodetabek"),
+        ("eko.prasetyo@duakelinci.id", "Eko Prasetyo (Field Salesman Surabaya)", "salesman", "REGION", "Jawa Timur"),
     ]
     cur.executemany("INSERT INTO user_scope (email, full_name, role, scope_type, scope_value) VALUES (?, ?, ?, ?, ?);", users)
 

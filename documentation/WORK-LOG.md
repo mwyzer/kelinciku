@@ -4,6 +4,24 @@ Format: entri terbaru di atas. Setiap entri: tanggal, ringkasan, detail, keputus
 
 ---
 
+## 2026-11-26
+
+### Pengetatan keamanan API & perbaikan FEFO
+**Dikerjakan:**
+- Kredensial SMTP & PostgreSQL dipindah ke `.env`; fallback password DB dihapus; port Postgres hanya `127.0.0.1`.
+- `get_current_user`: header `X-User-Email` wajib (401) dan email harus terdaftar di `user_scope` (403). Fallback otomatis ke akses NATIONAL dihapus.
+- CORS dibatasi ke origin dari env `CORS_ORIGINS` (default dashboard :3000 & portal staf :3001).
+- Health check kini mengecek koneksi database dan memakai timestamp aktual.
+- Implementasi `wms_service.get_fefo_picking_recommendation` (sebelumnya dipanggil endpoint tapi belum ada).
+- Seed `user_scope` SQLite disamakan dengan Postgres + persona HOD/salesman yang dipakai frontend (24 user).
+- `scripts/test_api.py` ditambah uji 401/403 dan CORS. `test_api.py` & `test_all_modules.py` lulus.
+
+**Tindak lanjut:**
+- [ ] Cabut Gmail App Password lama yang sempat ter-commit ke repo publik; isi yang baru di `.env`.
+- [ ] Ganti `POSTGRES_PASSWORD` di `.env` dan di volume Postgres yang sudah ada.
+- [ ] Bersihkan history git dari kredensial lama (perlu force push) atau jadikan repo private.
+- [ ] Ganti header `X-User-Email` dengan SSO sungguhan (OIDC/JWT); banyak endpoint (WMS, IoT, master data, Telegram, sales route) belum memakai auth sama sekali.
+
 ## 2026-11-24
 
 ### 12:36 — Pengiriman Sukses Laporan Eksekutif ke Inbox Gmail Muhammad Wyzer

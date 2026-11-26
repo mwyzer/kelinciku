@@ -1,7 +1,9 @@
 from fastapi import FastAPI, Depends, Header, HTTPException, Query, Body, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, FileResponse, HTMLResponse
+import os
 import pathlib
+import datetime
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List, Dict, Any
 import urllib.request
@@ -25,19 +27,28 @@ app = FastAPI(
     description="API untuk Dashboard Live, AI Insight Agent, Forecasting, e-Signature, dan WMS Gudang"
 )
 
+_default_origins = "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001"
+CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", _default_origins).split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "X-User-Email", "Authorization"],
 )
 
 def get_current_user(x_user_email: Optional[str] = Header(None, alias="X-User-Email")) -> Dict[str, Any]:
-    email = x_user_email or "muhammad.wyzer@gmail.com"
+    """Identitas user dari header X-User-Email (simulasi SSO sampai SSO asli terpasang).
+
+    Tidak ada lagi fallback ke akses NATIONAL: header wajib dan email harus terdaftar di user_scope.
+    """
+    email = (x_user_email or "").strip().lower()
+    if not email:
+        raise HTTPException(status_code=401, detail="Header X-User-Email wajib diisi.")
     user = dwh_service.get_user_scope(email)
     if not user:
-        return {"email": email, "full_name": "Muhammad Wyzer", "role": "head_sales", "scope_type": "NATIONAL", "scope_value": "ALL"}
+        raise HTTPException(status_code=403, detail=f"User {email} tidak terdaftar di user_scope.")
     return user
 
 # --- HEALTH & AUTH ---
@@ -58,7 +69,18 @@ def get_sales_brief():
 
 @app.get("/api/v1/health")
 def health_check():
-    return {"status": "pass", "version": "0.2.1", "timestamp": "2026-11-24T11:55:00Z"}
+    now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    try:
+        conn = dwh_service.get_db()
+        cur = conn.cursor()
+        cur.execute("SELECT 1")
+        cur.fetchone()
+        conn.close()
+        db_status = "pass"
+    except Exception as e:
+        db_status = f"fail: {e}"
+    status = "pass" if db_status == "pass" else "fail"
+    return {"status": status, "version": app.version, "timestamp": now, "checks": {"database": db_status}}
 
 @app.get("/api/v1/auth/me")
 def get_profile(user: Dict[str, Any] = Depends(get_current_user)):

@@ -196,6 +196,11 @@ INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VAL
 INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (29, 'ilham.spv.bdg@duakelinci.id', 'Ilham Syahputra (Warehouse Supervisor)', 'warehouse_lead', 'REGION', 'Jawa Barat') ON CONFLICT DO NOTHING;
 INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (30, 'surya.picker@duakelinci.id', 'Surya Saputra (FEFO Picking Lead Operator)', 'warehouse_lead', 'REGION', 'Jawa Barat') ON CONFLICT DO NOTHING;
 INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (31, 'rian.checker@duakelinci.id', 'Rian Hidayat (Inbound/Outbound Inspector)', 'warehouse_lead', 'REGION', 'Jabodetabek') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (32, 'maya.indah@duakelinci.id', 'Maya Indah (Head of Marketing)', 'head_marketing', 'NATIONAL', 'ALL') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (33, 'rudi.hartono@duakelinci.id', 'Rudi Hartono (Head of Finance)', 'head_finance', 'NATIONAL', 'ALL') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (34, 'dedi.kurniawan@duakelinci.id', 'Dedi Kurniawan (Head of Warehouse)', 'warehouse_lead', 'NATIONAL', 'ALL') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (35, 'budi.santoso@duakelinci.id', 'Budi Santoso (Field Salesman Jakarta)', 'salesman', 'REGION', 'Jabodetabek') ON CONFLICT DO NOTHING;
+INSERT INTO user_scope (id, email, full_name, role, scope_type, scope_value) VALUES (36, 'eko.prasetyo@duakelinci.id', 'Eko Prasetyo (Field Salesman Surabaya)', 'salesman', 'REGION', 'Jawa Timur') ON CONFLICT DO NOTHING;
 
 -- Seed data for master_products (13 rows)
 INSERT INTO master_products (sku_id, sku_name, brand, category, carton_pack_qty, price_het_idr, price_wholesale_idr, shelf_life_days, status) VALUES ('SKU-KAC-001', 'Kacang Kulit 70g', 'Kacang Dua Kelinci', 'Snack Kacang & Biskuit', 24, 150000.0, 135000.0, 365, 'ACTIVE') ON CONFLICT DO NOTHING;

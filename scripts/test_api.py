@@ -10,6 +10,21 @@ client = TestClient(app)
 r_health = client.get('/api/v1/health')
 print('Health API:', r_health.status_code, r_health.json())
 assert r_health.status_code == 200
+assert r_health.json()['checks']['database'] == 'pass'
+
+# 1b. Auth: header wajib & email harus terdaftar (tidak ada fallback NATIONAL)
+r_noauth = client.get('/api/v1/dashboard/overview')
+print('Tanpa header:', r_noauth.status_code)
+assert r_noauth.status_code == 401
+r_unknown = client.get('/api/v1/dashboard/overview', headers={'X-User-Email': 'orang.asing@contoh.com'})
+print('Email tak terdaftar:', r_unknown.status_code)
+assert r_unknown.status_code == 403
+
+# 1c. CORS: origin asing tidak diizinkan, origin dashboard diizinkan
+r_cors_bad = client.options('/api/v1/health', headers={'Origin': 'https://evil.example', 'Access-Control-Request-Method': 'GET'})
+assert 'access-control-allow-origin' not in r_cors_bad.headers
+r_cors_ok = client.options('/api/v1/health', headers={'Origin': 'http://localhost:3000', 'Access-Control-Request-Method': 'GET'})
+assert r_cors_ok.headers.get('access-control-allow-origin') == 'http://localhost:3000'
 
 # 2. National Overview (Admin / Head of Sales)
 r_admin = client.get('/api/v1/dashboard/overview', headers={'X-User-Email': 'head.sales@duakelinci.id'})
