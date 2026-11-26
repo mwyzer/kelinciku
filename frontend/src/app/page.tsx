@@ -61,6 +61,7 @@ export default function HomePage() {
   const [isMasterMenuOpen, setIsMasterMenuOpen] = useState(true);
   const [products, setProducts] = useState<any[]>([]);
   const [outlets, setOutlets] = useState<any[]>([]);
+  const [outletRows, setOutletRows] = useState<any[]>([]);
   const [warehouses, setWarehouses] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
 
@@ -165,6 +166,10 @@ export default function HomePage() {
         fetch(`${API_BASE}/master/employees`).then(r => r.json())
       ]);
       setOutlets(resOutlets || []);
+      fetch(`${API_BASE}/master/outlets/transactions`)
+        .then(r => r.json())
+        .then(rows => setOutletRows(Array.isArray(rows) ? rows : []))
+        .catch(e => console.error("Outlet transactions load error:", e));
       setProducts(resProducts || []);
       setWarehouses(resWh || []);
       setEmployees(resEmp || []);
@@ -1503,7 +1508,7 @@ export default function HomePage() {
                     onClick={() => {
                       const defaultData: any =
                         masterSubTab === "employees" ? { employee_id: `EMP-NEW-${Date.now().toString().slice(-4)}`, full_name: "", email: "", phone: "", department: "SALES", job_title: "", role_type: "STAFF", region: "Jawa Barat", branch: "Bandung", warehouse_id: "WH-BDG", status: "ACTIVE" } :
-                        masterSubTab === "outlets" ? { outlet_id: `OUT-NEW-${Date.now().toString().slice(-4)}`, outlet_name: "", outlet_type: "Toko Kelontong", region: "Jawa Barat", branch: "Bandung", credit_limit_idr: 50000000, payment_term_days: 14, status: "ACTIVE" } :
+                        masterSubTab === "outlets" ? { outlet_id: `OUT-NEW-${Date.now().toString().slice(-4)}`, outlet_name: "", outlet_type: "Toko Kelontong", region: "Jawa Barat", branch: "Bandung", payment_term_days: 14, status: "ACTIVE" } :
                         masterSubTab === "products" ? { sku_id: `SKU-NEW-${Date.now().toString().slice(-4)}`, sku_name: "", brand: "Kacang Dua Kelinci", category: "Snack", carton_pack_qty: 24, price_het_idr: 120000, price_wholesale_idr: 105000, shelf_life_days: 365, status: "ACTIVE" } :
                         { warehouse_id: `WH-NEW-${Date.now().toString().slice(-4)}`, warehouse_name: "", region: "Jawa Barat", branch: "Bandung", capacity_carton: 15000, status: "ACTIVE" };
                       setEditingItem({ mode: "add", type: masterSubTab, data: defaultData });
@@ -1641,10 +1646,9 @@ export default function HomePage() {
                         className="bg-white border border-slate-300 rounded-lg px-2 py-1.5 text-xs outline-none"
                       >
                         <option value="ALL">Semua Wilayah</option>
-                        <option value="Jawa Barat">Jawa Barat</option>
-                        <option value="Jawa Tengah">Jawa Tengah</option>
-                        <option value="Jawa Timur">Jawa Timur</option>
-                        <option value="DKI Jakarta">DKI Jakarta</option>
+                        {Array.from(new Set(outletRows.map(r => r.region).filter(Boolean))).sort().map(v => (
+                          <option key={v as string} value={v as string}>{v as string}</option>
+                        ))}
                       </select>
                       <select
                         value={outletTypeFilter}
@@ -1652,9 +1656,9 @@ export default function HomePage() {
                         className="bg-white border border-slate-300 rounded-lg px-2 py-1.5 text-xs outline-none"
                       >
                         <option value="ALL">Semua Tipe Outlet</option>
-                        <option value="Grosir Besar">Grosir Besar</option>
-                        <option value="Supermarket">Supermarket</option>
-                        <option value="Toko Kelontong">Toko Kelontong</option>
+                        {Array.from(new Set(outletRows.map(r => r.outlet_type).filter(Boolean))).sort().map(v => (
+                          <option key={v as string} value={v as string}>{v as string}</option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -1663,27 +1667,41 @@ export default function HomePage() {
                   <div className="overflow-x-auto border border-slate-200 rounded-xl">
                     <table className="w-full text-left text-xs">
                       <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
-                        <tr>
-                          <th className="py-2.5 px-3">Kode Outlet</th>
-                          <th className="py-2.5 px-3">Nama Toko / Outlet</th>
-                          <th className="py-2.5 px-3">Tipe Saluran</th>
-                          <th className="py-2.5 px-3">Wilayah / Cabang</th>
-                          <th className="py-2.5 px-3 text-right">Plafon Kredit (IDR)</th>
-                          <th className="py-2.5 px-3 text-center">TOP (Hari)</th>
+                        <tr className="whitespace-nowrap">
+                          <th className="py-2.5 px-3">date</th>
+                          <th className="py-2.5 px-3">invoice no</th>
+                          <th className="py-2.5 px-3">region</th>
+                          <th className="py-2.5 px-3">branch</th>
+                          <th className="py-2.5 px-3">outlet id</th>
+                          <th className="py-2.5 px-3">outlet name</th>
+                          <th className="py-2.5 px-3">outlet type</th>
+                          <th className="py-2.5 px-3">salesman</th>
+                          <th className="py-2.5 px-3">brand</th>
+                          <th className="py-2.5 px-3">sku</th>
+                          <th className="py-2.5 px-3 text-right">qty carton</th>
+                          <th className="py-2.5 px-3 text-right">price per carton idr</th>
+                          <th className="py-2.5 px-3 text-right">gross sales idr</th>
+                          <th className="py-2.5 px-3 text-right">discount idr</th>
+                          <th className="py-2.5 px-3 text-right">net sales idr</th>
                           <th className="py-2.5 px-3 text-center">Aksi</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 font-medium">
-                        {outlets
+                        {outletRows
                           .filter(o => {
-                            const matchSearch = (o.outlet_name || "").toLowerCase().includes(outletSearch.toLowerCase()) ||
-                                                (o.outlet_id || "").toLowerCase().includes(outletSearch.toLowerCase());
+                            const q = outletSearch.toLowerCase();
+                            const matchSearch = !q || [o.outlet_name, o.outlet_id, o.invoice_no, o.branch, o.salesman, o.sku]
+                              .some(v => String(v || "").toLowerCase().includes(q));
                             const matchRegion = outletRegionFilter === "ALL" || o.region === outletRegionFilter;
                             const matchType = outletTypeFilter === "ALL" || o.outlet_type === outletTypeFilter;
                             return matchSearch && matchRegion && matchType;
                           })
-                          .map((o) => (
-                            <tr key={o.outlet_id} className="hover:bg-slate-50/80 transition">
+                          .map((o, idx) => (
+                            <tr key={`${o.invoice_no}-${o.sku}-${idx}`} className="hover:bg-slate-50/80 transition whitespace-nowrap">
+                              <td className="py-2.5 px-3 font-mono text-slate-700">{o.date}</td>
+                              <td className="py-2.5 px-3 font-mono text-slate-700">{o.invoice_no}</td>
+                              <td className="py-2.5 px-3 text-slate-600">{o.region}</td>
+                              <td className="py-2.5 px-3 text-slate-600">{o.branch}</td>
                               <td className="py-2.5 px-3 font-mono font-bold text-slate-800">{o.outlet_id}</td>
                               <td className="py-2.5 px-3 font-bold text-slate-900">{o.outlet_name}</td>
                               <td className="py-2.5 px-3">
@@ -1691,14 +1709,20 @@ export default function HomePage() {
                                   {o.outlet_type}
                                 </span>
                               </td>
-                              <td className="py-2.5 px-3 text-slate-600">{o.region} - {o.branch}</td>
-                              <td className="py-2.5 px-3 text-right font-mono font-bold text-[#56CA00]">
-                                Rp {Number(o.credit_limit_idr || 0).toLocaleString('id-ID')}
-                              </td>
-                              <td className="py-2.5 px-3 text-center font-mono">{o.payment_term_days} Hari</td>
+                              <td className="py-2.5 px-3 text-slate-600">{o.salesman}</td>
+                              <td className="py-2.5 px-3 text-slate-600">{o.brand}</td>
+                              <td className="py-2.5 px-3 text-slate-600">{o.sku}</td>
+                              <td className="py-2.5 px-3 text-right font-mono">{Number(o.qty_carton || 0).toLocaleString("id-ID")}</td>
+                              <td className="py-2.5 px-3 text-right font-mono">{Number(o.price_per_carton_idr || 0).toLocaleString("id-ID")}</td>
+                              <td className="py-2.5 px-3 text-right font-mono">{Number(o.gross_sales_idr || 0).toLocaleString("id-ID")}</td>
+                              <td className="py-2.5 px-3 text-right font-mono">{Number(o.discount_idr || 0).toLocaleString("id-ID")}</td>
+                              <td className="py-2.5 px-3 text-right font-mono font-bold">{Number(o.net_sales_idr || 0).toLocaleString("id-ID")}</td>
                               <td className="py-2.5 px-3 text-center space-x-1">
                                 <button
-                                  onClick={() => setEditingItem({ mode: "edit", type: "outlets", data: { ...o } })}
+                                  onClick={() => {
+                                    const master = outlets.find(m => m.outlet_id === o.outlet_id);
+                                    setEditingItem({ mode: "edit", type: "outlets", data: { ...(master || { outlet_id: o.outlet_id, outlet_name: o.outlet_name, outlet_type: o.outlet_type, region: o.region, branch: o.branch, payment_term_days: 21, status: "ACTIVE" }) } });
+                                  }}
                                   className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
                                   title="Edit"
                                 >
@@ -2199,15 +2223,6 @@ export default function HomePage() {
                         className="w-full p-2 border rounded-lg font-mono"
                       />
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-slate-700 font-semibold mb-1">Plafon Kredit (IDR)</label>
-                    <input
-                      type="number"
-                      value={editingItem.data.credit_limit_idr || 0}
-                      onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, credit_limit_idr: parseFloat(e.target.value) || 0 } })}
-                      className="w-full p-2 border rounded-lg font-bold text-emerald-600"
-                    />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>

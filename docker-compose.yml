@@ -78,7 +78,6 @@ services:
       - "3001:3000"
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
-      - NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000
       - BACKEND_API_INTERNAL_URL=http://backend:8000/api/:path*
     depends_on:
       - backend

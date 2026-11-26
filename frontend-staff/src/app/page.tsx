@@ -257,13 +257,6 @@ export default function StaffPortalPage() {
               <option value="agus.wh.bdg@duakelinci.id">Agus (WH Bandung)</option>
               <option value="teknisi.pati@duakelinci.id">Teknisi Pabrik Pati</option>
             </select>
-            <a
-              href={process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3000"}
-              className="px-2.5 py-1.5 rounded-lg bg-[#8C57FF]/10 text-[#8C57FF] hover:bg-[#8C57FF]/20 text-xs font-bold transition whitespace-nowrap"
-            >
-              <i className="fa-solid fa-chart-line mr-1"></i>
-              Dashboard
-            </a>
           </div>
         </div>
       </header>

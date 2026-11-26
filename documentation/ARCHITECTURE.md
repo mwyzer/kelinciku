@@ -79,7 +79,7 @@ flowchart TD
     SYS(["🏢 Platform Digital Operasional PT Dua Kelinci<br/>(FastAPI Backend & Next.js 14)"])
 
     E1 -->|"1. Input Order Penjualan & Klaim Retur"| SYS
-    SYS -->|"2. Status Alokasi Stok FEFO & Plafon Kredit"| E1
+    SYS -->|"2. Status Alokasi Stok FEFO"| E1
 
     E3 -->|"3. Unggah File Master CSV (Outlet, SKU, Gudang)"| SYS
     SYS -->|"4. Log Hasil Ingest & Validasi Data"| E3
@@ -120,12 +120,12 @@ flowchart TD
 
     Admin -->|"Unggah CSV (Products, Outlets, WH)"| P2
     P2 -->|"Upsert Record Baru / Update Limit"| D1
-    P2 -->|"Upsert Limit Kredit & TOP"| D2
+    P2 -->|"Upsert Data Outlet & TOP"| D2
     P2 -->|"Upsert Kapasitas Depo"| D3
 
     Sales -->|"Data Faktur & Transaksi"| P1
     D1 -.->|"Validasi SKU"| P1
-    D2 -.->|"Cek Plafon Kredit Outlet"| P1
+    D2 -.->|"Validasi Outlet"| P1
     P1 -->|"Simpan Transaksi Bersih"| D4
 
     Sales -->|"Permintaan Order Pengiriman"| P3

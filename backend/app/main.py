@@ -639,6 +639,10 @@ def delete_product_endpoint(sku_id: str):
 def get_master_outlets():
     return master_data_service.list_outlets()
 
+@app.get("/api/v1/master/outlets/transactions")
+def get_master_outlet_transactions():
+    return master_data_service.list_outlet_transactions()
+
 @app.post("/api/v1/master/outlets")
 def create_outlet_endpoint(payload: Dict[str, Any] = Body(...)):
     try:
@@ -653,11 +657,6 @@ def update_outlet_endpoint(outlet_id: str, payload: Dict[str, Any] = Body(...)):
 @app.delete("/api/v1/master/outlets/{outlet_id}")
 def delete_outlet_endpoint(outlet_id: str):
     return master_data_service.delete_outlet(outlet_id)
-
-@app.post("/api/v1/master/outlets/{outlet_id}/credit-limit")
-def update_credit_limit(outlet_id: str, payload: Dict[str, Any] = Body(...)):
-    new_limit = float(payload.get("credit_limit_idr", 50000000))
-    return master_data_service.update_outlet_credit_limit(outlet_id, new_limit)
 
 @app.get("/api/v1/master/warehouses")
 def get_master_warehouses():

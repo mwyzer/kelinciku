@@ -21,7 +21,7 @@ def init_master_data_tables():
     );
     """)
 
-    # 2. Master Outlet & Kredit Limit
+    # 2. Master Outlet
     cur.execute("""
     CREATE TABLE IF NOT EXISTS master_outlets (
         outlet_id TEXT PRIMARY KEY,
@@ -29,7 +29,6 @@ def init_master_data_tables():
         outlet_type TEXT NOT NULL,
         region TEXT NOT NULL,
         branch TEXT NOT NULL,
-        credit_limit_idr REAL DEFAULT 50000000,
         payment_term_days INTEGER DEFAULT 14,
         status TEXT DEFAULT 'ACTIVE'
     );
@@ -86,9 +85,9 @@ def init_master_data_tables():
         outlets = cur.fetchall()
         for row in outlets:
             cur.execute("""
-                INSERT INTO master_outlets (outlet_id, outlet_name, outlet_type, region, branch, credit_limit_idr, payment_term_days)
-                VALUES (?, ?, ?, ?, ?, ?, ?);
-            """, (row["outlet_id"], row["outlet_name"], row["outlet_type"], row["region"], row["branch"], 75000000.0, 21))
+                INSERT INTO master_outlets (outlet_id, outlet_name, outlet_type, region, branch, payment_term_days)
+                VALUES (?, ?, ?, ?, ?, ?);
+            """, (row["outlet_id"], row["outlet_name"], row["outlet_type"], row["region"], row["branch"], 21))
 
     # Seed Master Warehouses jika kosong
     cur.execute("SELECT COUNT(*) FROM master_warehouses;")
@@ -167,7 +166,21 @@ def list_products():
 def list_outlets():
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM master_outlets ORDER BY credit_limit_idr DESC, outlet_name ASC;")
+    cur.execute("SELECT * FROM master_outlets ORDER BY outlet_name ASC, outlet_id ASC;")
+    res = [dict(r) for r in cur.fetchall()]
+    conn.close()
+    return res
+
+def list_outlet_transactions():
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT date, invoice_no, region, branch, outlet_id, outlet_name, outlet_type,
+               salesman, brand, sku, qty_carton, price_per_carton_idr,
+               gross_sales_idr, discount_idr, net_sales_idr
+        FROM fact_sales
+        ORDER BY date DESC, invoice_no ASC, sku ASC;
+    """)
     res = [dict(r) for r in cur.fetchall()]
     conn.close()
     return res
@@ -243,14 +256,13 @@ def create_outlet(data: Dict[str, Any]) -> Dict[str, Any]:
     cur = conn.cursor()
     cur.execute("""
         INSERT INTO master_outlets (
-            outlet_id, outlet_name, outlet_type, region, branch, credit_limit_idr, payment_term_days, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            outlet_id, outlet_name, outlet_type, region, branch, payment_term_days, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT (outlet_id) DO UPDATE SET
             outlet_name = excluded.outlet_name,
             outlet_type = excluded.outlet_type,
             region = excluded.region,
             branch = excluded.branch,
-            credit_limit_idr = excluded.credit_limit_idr,
             payment_term_days = excluded.payment_term_days,
             status = excluded.status;
     """, (
@@ -259,7 +271,6 @@ def create_outlet(data: Dict[str, Any]) -> Dict[str, Any]:
         data.get("outlet_type", "Grosir"),
         data.get("region", "Jawa Barat"),
         data.get("branch", "Bandung"),
-        float(data.get("credit_limit_idr", 50000000)),
         int(data.get("payment_term_days", 14)),
         data.get("status", "ACTIVE")
     ))
@@ -360,14 +371,6 @@ def create_employee(data: Dict[str, Any]) -> Dict[str, Any]:
 
 # ================= UPDATE / EDIT / DELETE =================
 
-def update_outlet_credit_limit(outlet_id: str, new_limit: float):
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("UPDATE master_outlets SET credit_limit_idr = ? WHERE outlet_id = ?;", (new_limit, outlet_id))
-    conn.commit()
-    conn.close()
-    return {"success": True, "outlet_id": outlet_id, "new_limit_idr": new_limit}
-
 def update_outlet(outlet_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
     conn = get_db()
     cur = conn.cursor()
@@ -377,7 +380,6 @@ def update_outlet(outlet_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
             outlet_type = ?,
             region = ?,
             branch = ?,
-            credit_limit_idr = ?,
             payment_term_days = ?,
             status = ?
         WHERE outlet_id = ?;
@@ -386,7 +388,6 @@ def update_outlet(outlet_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
         data.get("outlet_type"),
         data.get("region"),
         data.get("branch"),
-        float(data.get("credit_limit_idr", 50000000)),
         int(data.get("payment_term_days", 14)),
         data.get("status", "ACTIVE"),
         outlet_id
@@ -565,20 +566,18 @@ def import_master_csv(entity_type: str, csv_content: str) -> Dict[str, Any]:
             o_type = r.get("outlet_type") or r.get("Tipe") or "Toko Kelontong"
             region = r.get("region") or r.get("Wilayah") or "Nasional"
             branch = r.get("branch") or r.get("Cabang") or "Pusat"
-            limit = float(r.get("credit_limit_idr") or r.get("Plafon Kredit") or 50000000)
             terms = int(r.get("payment_term_days") or r.get("TOP") or 14)
 
             cur.execute("""
-                INSERT INTO master_outlets (outlet_id, outlet_name, outlet_type, region, branch, credit_limit_idr, payment_term_days)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO master_outlets (outlet_id, outlet_name, outlet_type, region, branch, payment_term_days)
+                VALUES (?, ?, ?, ?, ?, ?)
                 ON CONFLICT(outlet_id) DO UPDATE SET
                     outlet_name=excluded.outlet_name,
                     outlet_type=excluded.outlet_type,
                     region=excluded.region,
                     branch=excluded.branch,
-                    credit_limit_idr=excluded.credit_limit_idr,
                     payment_term_days=excluded.payment_term_days;
-            """, (o_id, name, o_type, region, branch, limit, terms))
+            """, (o_id, name, o_type, region, branch, terms))
             imported_count += 1
 
     elif entity_type == "products":

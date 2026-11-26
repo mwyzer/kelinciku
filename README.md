@@ -27,7 +27,6 @@ Platform digital operasional terpadu PT Dua Kelinci yang mengintegrasikan analit
 * **Master Data Management (MDM):**
   * Manajemen data Outlet (51 outlet), SKU Produk (13 SKU), Gudang/Depo (13 depo cabang), dan **Karyawan Terpadu (16 profil personil Sales & Warehouse)**.
   * Fitur **Edit Modal** dan **Delete Data** interaktif untuk seluruh master entitas (Karyawan, Outlet, SKU Produk, Gudang).
-  * Pengubahan limit kredit outlet secara realtime dengan verifikasi proteksi piutang.
   * **Import CSV Fleksibel:** Kemampuan upload file CSV untuk upsert master karyawan, outlet, SKU, dan gudang sekaligus.
 * **Dual Persona Architecture (Sales & Warehouse):**
   * **Persona Sales:** Terintegrasi untuk *Head of Sales*, *Regional Sales Manager (Jabar, Jatim, Jabodetabek)*, *Area Supervisor*, hingga *Field Salesman*. Menyajikan analitik realisasi target omzet, anomali diskon, top/bottom outlet, serta pembuatan persetujuan diskon komersial.
@@ -63,7 +62,7 @@ flowchart TD
 
     %% Aliran Data
     E1 -->|"1. Input Order Penjualan & Klaim Retur"| SYS
-    SYS -->|"2. Status Alokasi Stok FEFO & Plafon Kredit"| E1
+    SYS -->|"2. Status Alokasi Stok FEFO"| E1
 
     E3 -->|"3. Unggah File Master CSV (Outlet, SKU, Gudang)"| SYS
     SYS -->|"4. Log Hasil Ingest & Validasi Data"| E3
@@ -111,12 +110,12 @@ flowchart TD
     %% Hubungan Aliran
     Admin -->|"Unggah CSV (Products, Outlets, WH)"| P2
     P2 -->|"Upsert Record Baru / Update Limit"| D1
-    P2 -->|"Upsert Limit Kredit & TOP"| D2
+    P2 -->|"Upsert Data Outlet & TOP"| D2
     P2 -->|"Upsert Kapasitas Depo"| D3
 
     Sales -->|"Data Faktur & Transaksi"| P1
     D1 -.->|"Validasi SKU"| P1
-    D2 -.->|"Cek Plafon Kredit Outlet"| P1
+    D2 -.->|"Validasi Outlet"| P1
     P1 -->|"Simpan Transaksi Bersih"| D4
 
     Sales -->|"Permintaan Order Pengiriman"| P3
@@ -188,7 +187,6 @@ erDiagram
         string outlet_type "Tipe Outlet (Grosir / Retail / MT)"
         string region "Wilayah Penjualan"
         string branch "Cabang Depo"
-        real credit_limit_idr "Plafon Kredit Maksimal (IDR)"
         int payment_term_days "Term of Payment (TOP Hari)"
         string status "ACTIVE / BLOCKED"
     }
@@ -277,11 +275,10 @@ erDiagram
 
 Sistem dilengkapi antarmuka Master Data terintegrasi dengan kemampuan:
 1. **Pencarian & Filter Cepat:** Mencari outlet, produk, atau gudang secara instan berdasarkan nama, kode, atau cabang.
-2. **Pembaruan Kredit Limit Interaktif:** Mengubah limit kredit outlet langsung dari antarmuka tabel dengan verifikasi instan.
-3. **Import File CSV:** 
+2. **Import File CSV:** 
    * Endpoint: `POST /api/v1/master/import-csv`
    * Format header yang didukung:
-     * **Outlets:** `outlet_id, outlet_name, outlet_type, region, branch, credit_limit_idr, payment_term_days`
+     * **Outlets:** `outlet_id, outlet_name, outlet_type, region, branch, payment_term_days`
      * **Products:** `sku_id, sku_name, brand, category, carton_pack_qty, price_het_idr, price_wholesale_idr, shelf_life_days`
      * **Warehouses:** `warehouse_id, warehouse_name, region, branch, capacity_carton`
      * **Employees:** `employee_id, full_name, email, phone, department, job_title, role_type, region, branch, warehouse_id`

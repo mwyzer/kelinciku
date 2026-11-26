@@ -59,7 +59,6 @@ CREATE TABLE IF NOT EXISTS master_outlets (
     outlet_type VARCHAR(100) NOT NULL,
     region VARCHAR(100) NOT NULL,
     branch VARCHAR(100) NOT NULL,
-    credit_limit_idr DOUBLE PRECISION DEFAULT 50000000,
     payment_term_days INTEGER DEFAULT 14,
     status VARCHAR(50) DEFAULT 'ACTIVE'
 );

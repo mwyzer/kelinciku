@@ -203,7 +203,6 @@ erDiagram
         string outlet_type
         string region
         string branch
-        real credit_limit_idr
         int payment_term_days
         string status
     }
