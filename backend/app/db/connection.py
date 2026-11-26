@@ -106,7 +106,7 @@ def get_db():
                     port=int(os.getenv("POSTGRES_PORT", "5432")),
                     dbname=os.getenv("POSTGRES_DB", "duakelinci_dwh"),
                     user=os.getenv("POSTGRES_USER", "duakelinci_user"),
-                    password=os.getenv("POSTGRES_PASSWORD", "***REMOVED***")
+                    password=os.getenv("POSTGRES_PASSWORD")
                 )
             return PostgresConnectionWrapper(conn)
         except Exception as e:

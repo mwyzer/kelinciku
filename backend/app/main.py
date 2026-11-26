@@ -588,8 +588,8 @@ def patch_resolve_alert(alert_id: str, payload: Dict[str, Any] = Body(...)):
     return iot_service.resolve_iot_alert_enhanced(alert_id, resolved_by, notes)
 
 @app.post("/api/v1/iot/alerts/{alert_id}/resolve")
-def post_resolve_iot_alert(alert_id: int):
-    return iot_service.resolve_iot_alert_enhanced(str(alert_id), "teknisi.shift@duakelinci.id", "Selesai ditangani")
+def post_resolve_iot_alert(alert_id: str):
+    return iot_service.resolve_iot_alert_enhanced(alert_id, "teknisi.shift@duakelinci.id", "Selesai ditangani")
 
 
 

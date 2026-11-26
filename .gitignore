@@ -10,8 +10,18 @@ frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/.pnpm-debug.log*
+frontend/tsconfig.tsbuildinfo
+frontend-staff/node_modules/
+frontend-staff/.next/
+frontend-staff/out/
+frontend-staff/build/
+frontend-staff/.vercel/
+frontend-staff/tsconfig.tsbuildinfo
+frontend-staff/.env.local
+frontend-staff/.env.*.local
 
 # Python & FastAPI
+__pycache__/
 backend/__pycache__/
 backend/*/__pycache__/
 backend/*/*/__pycache__/

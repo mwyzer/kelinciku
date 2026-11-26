@@ -1,3 +1,4 @@
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -217,12 +218,26 @@ def send_executive_email_via_smtp(
     to_email: str,
     subject: str,
     html_body: str,
-    smtp_host: str = "smtp.gmail.com",
-    smtp_port: int = 465,
-    smtp_user: str = "muhammad.wyzer@gmail.com",
-    smtp_pass: str = "***REMOVED***"
+    smtp_host: Optional[str] = None,
+    smtp_port: Optional[int] = None,
+    smtp_user: Optional[str] = None,
+    smtp_pass: Optional[str] = None
 ) -> Dict[str, Any]:
-    """Mengirim email HTML langsung via SMTP SSL Port 465 menggunakan Google App Password."""
+    """Mengirim email HTML langsung via SMTP SSL menggunakan Google App Password.
+
+    Kredensial dibaca dari environment variable SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
+    bila tidak diberikan sebagai argumen.
+    """
+    smtp_host = smtp_host or os.getenv("SMTP_HOST", "smtp.gmail.com")
+    smtp_port = smtp_port or int(os.getenv("SMTP_PORT", "465"))
+    smtp_user = smtp_user or os.getenv("SMTP_USER")
+    smtp_pass = smtp_pass or os.getenv("SMTP_PASS")
+    if not smtp_user or not smtp_pass:
+        return {
+            "success": False,
+            "status": "SMTP_NOT_CONFIGURED",
+            "error": "SMTP_USER dan SMTP_PASS belum diset di environment."
+        }
     clean_pass = smtp_pass.replace(" ", "")
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
